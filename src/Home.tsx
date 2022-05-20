@@ -52,15 +52,15 @@ function Home(props: any) {
   const [total, perCluster, perBuild] = groupValues(gsbMap);
   return (
     <Box>
-      <Typography variant="h4" gutterBottom component="div">
+      <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
         Summary
       </Typography>
       <TotalSummary total={total} />
-      <Typography variant="h4" gutterBottom component="div">
+      <Typography variant="h5" gutterBottom component="div">
         Clusters
       </Typography>
       <ClustersSummary perCluster={perCluster} />
-      <Typography variant="h4" gutterBottom component="div">
+      <Typography variant="h5" gutterBottom component="div">
         Builds
       </Typography>
       <GameServerBuildsSummary perBuild={perBuild} />
