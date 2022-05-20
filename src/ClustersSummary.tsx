@@ -11,15 +11,15 @@ function ClustersSummaryItem(props: any) {
 }
 
 function ClustersSummary(props: any) {
-  let items = Object.keys(props.perCluster).map((clusterName) => <ClustersSummaryItem clusterName={clusterName} values={props.perCluster[clusterName]} />);
+  let items = Object.keys(props.perCluster).map((clusterName, index) => <ClustersSummaryItem key={index} clusterName={clusterName} values={props.perCluster[clusterName]} />);
   return (
     <TableContainer component={Paper} sx={{ marginBottom: "40px"}}>
       <Table sx={{ minWidth: 500 }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Cluster Name</TableCell>
-            <TableCell>Active</TableCell>
             <TableCell>StandingBy</TableCell>
+            <TableCell>Active</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
