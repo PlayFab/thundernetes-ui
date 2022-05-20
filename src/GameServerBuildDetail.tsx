@@ -31,7 +31,7 @@ function GameServerBuildDetail(props: any) {
       .then(response => response.json())
       .then(response => {console.log(response); setGsb(response)})
       .catch(err => {console.log(err); setGsb(emptyGsb)});
-  }, [clusterApi]);
+  }, [clusterApi, params.namespace, params.buildName]);
 
   return (
     <Box>
@@ -39,13 +39,13 @@ function GameServerBuildDetail(props: any) {
         {params.namespace+"/"+params.buildName}
       </Typography>
       <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
-        Status
-      </Typography>
-      <Box sx={{ marginBottom: "40px" }}><GameServerBuildStatus gsb={gsb} /></Box>
-      <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
         Specs
       </Typography>
       <Box sx={{ marginBottom: "40px" }}><GameServerBuildSpec clusterApi={clusterApi} namespace={params.namespace} buildName={params.buildName} gsb={gsb} /></Box>
+      <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
+        Status
+      </Typography>
+      <Box sx={{ marginBottom: "40px" }}><GameServerBuildStatus gsb={gsb} /></Box>
       <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
         Game Servers
       </Typography>

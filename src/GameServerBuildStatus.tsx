@@ -10,8 +10,8 @@ function GameServerBuildStatus(props: any) {
             <TableCell><Typography>{props.gsb.status.health}</Typography></TableCell>
           </TableRow>
           <TableRow>
-            <TableCell><Typography>Current StandBy</Typography></TableCell>
-            <TableCell><Typography>{props.gsb.status.currentStandingByReadyDesired}</Typography></TableCell>
+            <TableCell><Typography>Current StandingBy</Typography></TableCell>
+            <TableCell><Typography>{props.gsb.status.currentStandingBy ? props.gsb.status.currentStandingBy : 0}</Typography></TableCell>
           </TableRow>
           <TableRow>
             <TableCell><Typography>Current Active</Typography></TableCell>
