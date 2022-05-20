@@ -11,7 +11,7 @@ function GameServerTable(props: any) {
       .then(response => response.json())
       .then(response => setGsList(response.items))
       .catch(err => console.log(err));
-  });
+  }, [props.clusterApi, props.gsb.metadata.namespace, props.gsb.metadata.name]);
 
   let items = gsList.map((gs, index) => <GameServerTableItem key={index} gs={gs} />);
   return (

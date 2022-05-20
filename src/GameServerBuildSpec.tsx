@@ -1,10 +1,14 @@
-import { useState } from "react";
-import { Button, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Button, Table, TableBody, TableCell, TableContainer, TableRow, Typography, Paper, TextField } from "@mui/material";
 
 function GameServerBuildSpec(props: any) {
-  const [max, setMax] = useState(props.gsb.spec.max);
-  const [standingBy, setStandingBy] = useState(props.gsb.spec.standingBy);
+  const [max, setMax] = useState(0);
+  const [standingBy, setStandingBy] = useState(0);
 
+  useEffect(() => {
+    setMax(props.gsb.spec.max);
+    setStandingBy(props.gsb.spec.standingBy);
+  }, [props.gsb.spec]);
 
   function handleChange(event: any) {
     if (event.target.name === "max") {
@@ -16,7 +20,19 @@ function GameServerBuildSpec(props: any) {
 
   function handleSubmit(event: any) {
     event.preventDefault();
-    console.log({ max, standingBy });
+    const patch = {
+      standingBy: Math.floor(standingBy),
+      max: Math.floor(max)
+    }
+    console.log(JSON.stringify(patch));
+    console.log(props.clusterApi+"gameservers/"+props.namespace+"/"+props.buildName);
+    fetch(props.clusterApi+"gameserverbuilds/"+props.namespace+"/"+props.buildName,{
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(patch)
+    }).then(response => console.log(response));
   }
 
   return (
@@ -25,34 +41,34 @@ function GameServerBuildSpec(props: any) {
         <Table sx={{ minWidth: 500 }} aria-label="simple table">
           <TableBody>
             <TableRow>
-              <TableCell>Build ID</TableCell>
-              <TableCell>{props.gsb.spec.buildID}</TableCell>
+              <TableCell><Typography>Build ID</Typography></TableCell>
+              <TableCell><Typography>{props.gsb.spec.buildID}</Typography></TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>StandingBy</TableCell>
+              <TableCell><Typography>StandingBy</Typography></TableCell>
               <TableCell>
                 <TextField name="standingBy" type="number" size="small" sx={{ width: 100 }} value={standingBy} onChange={handleChange} />
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Max</TableCell>
+              <TableCell><Typography>Max</Typography></TableCell>
               <TableCell>
                 <TextField name="max" type="number" size="small" sx={{ width: 100 }} value={max} onChange={handleChange} />
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Ports to Expose</TableCell>
-              <TableCell>{props.gsb.spec.portsToExpose}</TableCell>
+              <TableCell><Typography>Ports to Expose</Typography></TableCell>
+              <TableCell><Typography>{props.gsb.spec.portsToExpose}</Typography></TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Crashes to mark unhealthy</TableCell>
-              <TableCell>{props.gsb.spec.crashesToMarkUnhealthy}</TableCell>
+              <TableCell><Typography>Crashes to mark unhealthy</Typography></TableCell>
+              <TableCell><Typography>{props.gsb.spec.crashesToMarkUnhealthy}</Typography></TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
       <Button variant="contained" color="primary" type="submit" sx={{ marginTop: "10px" }}>
-        Submit
+        Patch
       </Button>
     </form>
   );

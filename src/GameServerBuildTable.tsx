@@ -8,19 +8,19 @@ function GameServerBuildTable(props: any) {
   useEffect(() => {
     fetch(props.clusterApi + "gameserverbuilds")
       .then(response => response.json())
-      .then(response => setGsbList(response.items))
-      .catch(err => console.log(err));
-  });
+      .then(response => {console.log(response.items); setGsbList(response.items)})
+      .catch(err => {console.log(err); setGsbList([])});
+  }, [props.clusterApi]);
 
-  let items = gsbList.map((gsb, index) => <GameServerBuildTableItem key={index} clusterApi={props.clusterApi} gsb={gsb} />)
+  let items = gsbList.map((gsb, index) => <GameServerBuildTableItem key={index} clusterApi={props.clusterApi} gsb={gsb} />);
   return (
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell />
             <TableCell>Name</TableCell>
             <TableCell>Namespace</TableCell>
+            <TableCell>Active</TableCell>
             <TableCell>StandingBy</TableCell>
             <TableCell>Crashes</TableCell>
             <TableCell>Health</TableCell>

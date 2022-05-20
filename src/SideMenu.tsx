@@ -1,12 +1,13 @@
-import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import { Box, Divider, Drawer, List, Toolbar } from '@mui/material';
+import { AccountTree, Home } from '@mui/icons-material';
+import ListItemLink from './ListItemLink';
 
 type SideMenuProps = {
+  clusterNames: Array<string>;
   width: number;
 }
 
-function SideMenu({ width }: SideMenuProps) {
+function SideMenu({ clusterNames, width }: SideMenuProps) {
   return (
     <Drawer
       sx={{
@@ -23,15 +24,12 @@ function SideMenu({ width }: SideMenuProps) {
       <Toolbar />
       <Box sx={{ overflow: 'auto' }}>
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
+          <ListItemLink icon={<Home />} to={"/"} primary={"Home"} />
+        </List>
+        <Divider />
+        <List>
+          {clusterNames.map((entry, index) => (
+            <ListItemLink key={index} icon={<AccountTree />} to={entry} primary={entry} />
           ))}
         </List>
       </Box>
