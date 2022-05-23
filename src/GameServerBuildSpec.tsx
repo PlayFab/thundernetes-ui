@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Table, TableBody, TableCell, TableContainer, TableRow, Typography, Paper, TextField } from "@mui/material";
 import { GameServerBuild } from "./types";
 
