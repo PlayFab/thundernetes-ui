@@ -2,10 +2,14 @@ import { Box, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import GameServerBuildTable from "./GameServerBuildTable";
 
-function ClusterDetail(props: any) {
+interface ClusterDetailProps {
+  clusters: Record<string, Record<string, string>>
+}
+
+function ClusterDetail({ clusters }: ClusterDetailProps) {
   const params = useParams();
   const clusterName = params.clusterName?params.clusterName:"";
-  const clusterApi = props.clusters[clusterName];
+  const clusterApi = clusters[clusterName].api;
   console.log(clusterApi);
   return (
     <Box>

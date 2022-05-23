@@ -1,14 +1,20 @@
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import { Button, Table, TableBody, TableCell, TableContainer, TableRow, Typography, Paper, TextField } from "@mui/material";
+import { GameServerBuild } from "./types";
 
-function GameServerBuildSpec(props: any) {
+interface GameServerBuildSpecProps {
+  gsb: GameServerBuild,
+  clusterApi: string
+}
+
+function GameServerBuildSpec({ gsb, clusterApi }: GameServerBuildSpecProps) {
   const [max, setMax] = useState(0);
   const [standingBy, setStandingBy] = useState(0);
 
   useEffect(() => {
-    setMax(props.gsb.spec.max);
-    setStandingBy(props.gsb.spec.standingBy);
-  }, [props.gsb.spec]);
+    setMax(gsb.spec.max);
+    setStandingBy(gsb.spec.standingBy);
+  }, [gsb.spec]);
 
   function handleChange(event: any) {
     if (event.target.name === "max") {
@@ -25,8 +31,8 @@ function GameServerBuildSpec(props: any) {
       max: Math.floor(max)
     }
     console.log(JSON.stringify(patch));
-    console.log(props.clusterApi+"gameservers/"+props.namespace+"/"+props.buildName);
-    fetch(props.clusterApi+"gameserverbuilds/"+props.namespace+"/"+props.buildName,{
+    console.log(clusterApi+"gameservers/"+gsb.metadata.namespace+"/"+gsb.metadata.name);
+    fetch(clusterApi+"gameserverbuilds/"+gsb.metadata.namespace+"/"+gsb.metadata.name,{
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
@@ -42,7 +48,7 @@ function GameServerBuildSpec(props: any) {
           <TableBody>
             <TableRow>
               <TableCell><Typography>Build ID</Typography></TableCell>
-              <TableCell><Typography>{props.gsb.spec.buildID}</Typography></TableCell>
+              <TableCell><Typography>{gsb.spec.buildID}</Typography></TableCell>
             </TableRow>
             <TableRow>
               <TableCell><Typography>StandingBy</Typography></TableCell>
@@ -58,11 +64,11 @@ function GameServerBuildSpec(props: any) {
             </TableRow>
             <TableRow>
               <TableCell><Typography>Ports to Expose</Typography></TableCell>
-              <TableCell><Typography>{props.gsb.spec.portsToExpose}</Typography></TableCell>
+              <TableCell><Typography>{gsb.spec.portsToExpose}</Typography></TableCell>
             </TableRow>
             <TableRow>
               <TableCell><Typography>Crashes to mark unhealthy</Typography></TableCell>
-              <TableCell><Typography>{props.gsb.spec.crashesToMarkUnhealthy}</Typography></TableCell>
+              <TableCell><Typography>{gsb.spec.crashesToMarkUnhealthy}</Typography></TableCell>
             </TableRow>
           </TableBody>
         </Table>

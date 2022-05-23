@@ -1,17 +1,12 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import ClustersSummaryItem from "./ClustersSummaryItem";
 
-function ClustersSummaryItem(props: any) {
-  return (
-    <TableRow>
-      <TableCell>{props.clusterName}</TableCell>
-      <TableCell>{props.values.standingBy}</TableCell>
-      <TableCell>{props.values.active}</TableCell>
-    </TableRow>
-  );
+interface ClustersSummaryProps {
+  perCluster: Record<string, Record<string, number>>
 }
 
-function ClustersSummary(props: any) {
-  let items = Object.keys(props.perCluster).map((clusterName, index) => <ClustersSummaryItem key={index} clusterName={clusterName} values={props.perCluster[clusterName]} />);
+function ClustersSummary({ perCluster }: ClustersSummaryProps) {
+  let items = Object.keys(perCluster).map((clusterName, index) => <ClustersSummaryItem key={index} clusterName={clusterName} values={perCluster[clusterName]} />);
   return (
     <TableContainer component={Paper} sx={{ marginBottom: "40px"}}>
       <Table sx={{ minWidth: 500 }} aria-label="simple table">

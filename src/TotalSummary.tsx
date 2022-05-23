@@ -9,20 +9,24 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-function TotalSummary(props: any) {
+interface TotalSummaryProps {
+  total: Record<string, number>
+}
+
+function TotalSummary({ total }: TotalSummaryProps) {
   return (
     <Box sx={{ flexGrow: 1, marginBottom: "40px" }}>
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={4}>
           <Item>
             <Typography>Total Standing By</Typography>
-            <Typography>{props.total.standingBy}</Typography>
+            <Typography>{total.standingBy}</Typography>
           </Item>
         </Grid>
         <Grid item xs={4}>
           <Item>
             <Typography>Total Active</Typography>
-            <Typography>{props.total.active}</Typography>
+            <Typography>{total.active}</Typography>
           </Item>
         </Grid>
       </Grid>
