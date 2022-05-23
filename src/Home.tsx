@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import ClustersSummary from "./ClustersSummary";
+import { GameServerBuild } from "./types";
 import GameServerBuildsSummary from "./GameServerBuildsSummary";
 import TotalSummary from "./TotalSummary";
 
-function groupValues(data: Map<string, Array<any>>) {
+function groupValues(data: Map<string, Array<GameServerBuild>>): [Record<string, number>, Record<string, Record<string, number>>, Record<string, Record<string, number>>] {
   function emptyValues() {
     return {
       standingBy: 0,
@@ -12,14 +13,14 @@ function groupValues(data: Map<string, Array<any>>) {
     }
   };
   let total: Record<string, number> = emptyValues();
-  let perCluster: Record<string, any> = {};
-  let perBuild: Record<string, any> = {};
+  let perCluster: Record<string, Record<string, number>> = {};
+  let perBuild: Record<string, Record<string, number>> = {};
   let keys = Array.from(data.keys());
   keys.forEach((clusterName) => {
     if (!perCluster[clusterName]) {
       perCluster[clusterName] = emptyValues();
     }
-    data.get(clusterName)!.forEach((gsb: any) => {
+    data.get(clusterName)!.forEach((gsb: GameServerBuild) => {
       let buildName = gsb.metadata.name;
       if (!perBuild[buildName]) {
         perBuild[buildName] = emptyValues();
@@ -35,19 +36,24 @@ function groupValues(data: Map<string, Array<any>>) {
   return [total, perCluster, perBuild];
 }
 
-function Home(props: any) {
-  const [gsbMap, setGsbMap] = useState<Map<string, Array<any>>>(new Map());
+interface HomeProps {
+  clusters: Record<string, Record<string,string>>
+}
+
+function Home({ clusters }: HomeProps) {
+  const [gsbMap, setGsbMap] = useState<Map<string, Array<GameServerBuild>>>(new Map());
 
   useEffect(() => {
-    let entries = Object.entries(props.clusters);
+    let entries = Object.entries(clusters);
     entries.forEach((value) => {
-      let [clusterName, clusterApi] = value;
+      let [clusterName, endpoints] = value;
+      let clusterApi = endpoints.api;
       fetch(clusterApi + "gameserverbuilds")
         .then(response => response.json())
         .then(response => setGsbMap(prevGsbMap => new Map(prevGsbMap.set(clusterName, response.items))))
         .catch(err => { console.log(err); setGsbMap(prevGsbMap => new Map(prevGsbMap.set(clusterName, []))) });
     });
-  }, [props.clusters]);
+  }, [clusters]);
 
   const [total, perCluster, perBuild] = groupValues(gsbMap);
   return (

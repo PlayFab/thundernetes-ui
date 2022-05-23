@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
 import GameServerTableItem from "./GameServerTableItem";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { GameServerBuild, GameServer } from "./types";
 
-function GameServerTable(props: any) {
-  const [gsList, setGsList] = useState([]);
+interface GameServerTableProps {
+  clusterApi: string,
+  gsb: GameServerBuild
+}
+
+function GameServerTable({ clusterApi, gsb }: GameServerTableProps) {
+  const [gsList, setGsList] = useState<Array<GameServer>>([]);
 
   useEffect(() => {
-    let gsEndpoint = props.clusterApi + "gameserverbuilds/" + props.gsb.metadata.namespace + "/" + props.gsb.metadata.name + "/gameservers"
+    let gsEndpoint = clusterApi + "gameserverbuilds/" + gsb.metadata.namespace + "/" + gsb.metadata.name + "/gameservers"
     fetch(gsEndpoint)
       .then(response => response.json())
       .then(response => setGsList(response.items))
       .catch(err => console.log(err));
-  }, [props.clusterApi, props.gsb.metadata.namespace, props.gsb.metadata.name]);
+  }, [clusterApi, gsb.metadata.namespace, gsb.metadata.name]);
 
   let items = gsList.map((gs, index) => <GameServerTableItem key={index} gs={gs} />);
   return (

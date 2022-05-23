@@ -1,18 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { TableCell, TableRow } from "@mui/material";
+import { GameServerBuild } from "./types";
 
-function GameServerBuildTableItem(props: any) {
+interface GameServerBuildTableItemProps {
+  gsb: GameServerBuild
+}
 
+function GameServerBuildTableItem({ gsb }: GameServerBuildTableItemProps) {
   return (
     <React.Fragment>
       <TableRow>
-        <TableCell><Link to={"gsb/"+props.gsb.metadata.namespace+"/"+props.gsb.metadata.name}>{props.gsb.metadata.name}</Link><br />{props.gsb.spec.buildID}</TableCell>
-        <TableCell>{props.gsb.metadata.namespace}</TableCell>
-        <TableCell>{props.gsb.status.currentActive?props.gsb.status.currentActive:0}</TableCell>
-        <TableCell>{props.gsb.status.currentStandingByReadyDesired}</TableCell>
-        <TableCell>{props.gsb.status.crashesCount?props.gsb.status.crashesCount:0}</TableCell>
-        <TableCell>{props.gsb.status.health}</TableCell>
+        <TableCell><Link to={"gsb/"+gsb.metadata.namespace+"/"+gsb.metadata.name}>{gsb.metadata.name}</Link><br />{gsb.spec.buildID}</TableCell>
+        <TableCell>{gsb.metadata.namespace}</TableCell>
+        <TableCell>{gsb.status.currentActive?gsb.status.currentActive:0}</TableCell>
+        <TableCell>{gsb.status.currentStandingByReadyDesired}</TableCell>
+        <TableCell>{gsb.status.crashesCount?gsb.status.crashesCount:0}</TableCell>
+        <TableCell>{gsb.status.health}</TableCell>
       </TableRow>
     </React.Fragment>
   );

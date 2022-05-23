@@ -4,33 +4,25 @@ import { Box, Typography } from "@mui/material";
 import GameServerBuildSpec from "./GameServerBuildSpec";
 import GameServerBuildStatus from "./GameServerBuildStatus"
 import GameServerTable from "./GameServerTable";
+import { emptyGameServerBuild, GameServerBuild } from "./types";
 
-const emptyGsb = {
-  spec: {
-    buildID: "",
-    max: 0,
-    standingBy: 0,
-    portsToExpose: [],
-    crashesToMarkUnhealthy: 0
-  },
-  metadata: {
-    namespace: ""
-  },
-  status: {}
+interface GameServerBuildDetailProps {
+  clusters: Record<string, Record<string,string>>
 }
-function GameServerBuildDetail(props: any) {
-  const [gsb, setGsb] = useState(emptyGsb);
+
+function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
+  const [gsb, setGsb] = useState<GameServerBuild>(emptyGameServerBuild);
 
   const params = useParams();
   const clusterName = params.clusterName?params.clusterName:"";
-  const clusterApi = props.clusters[clusterName];
+  const clusterApi = clusters[clusterName].api;
 
   useEffect(() => {
     console.log(clusterApi+"gameserverbuilds/"+params.namespace+"/"+params.buildName);
     fetch(clusterApi+"gameserverbuilds/"+params.namespace+"/"+params.buildName)
       .then(response => response.json())
       .then(response => {console.log(response); setGsb(response)})
-      .catch(err => {console.log(err); setGsb(emptyGsb)});
+      .catch(err => {console.log(err); setGsb(emptyGameServerBuild)});
   }, [clusterApi, params.namespace, params.buildName]);
 
   return (
@@ -41,7 +33,7 @@ function GameServerBuildDetail(props: any) {
       <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
         Specs
       </Typography>
-      <Box sx={{ marginBottom: "40px" }}><GameServerBuildSpec clusterApi={clusterApi} namespace={params.namespace} buildName={params.buildName} gsb={gsb} /></Box>
+      <Box sx={{ marginBottom: "40px" }}><GameServerBuildSpec clusterApi={clusterApi} gsb={gsb} /></Box>
       <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
         Status
       </Typography>

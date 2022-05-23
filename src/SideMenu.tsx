@@ -2,9 +2,9 @@ import { Box, Divider, Drawer, List, Toolbar } from '@mui/material';
 import { AccountTree, Home } from '@mui/icons-material';
 import ListItemLink from './ListItemLink';
 
-type SideMenuProps = {
-  clusterNames: Array<string>;
-  width: number;
+interface SideMenuProps {
+  clusterNames: Array<string>,
+  width: number
 }
 
 function SideMenu({ clusterNames, width }: SideMenuProps) {
