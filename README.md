@@ -1,6 +1,23 @@
-# Getting Started with Create React App
+# Thundernetes Control Panel
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a web front end application to manage game servers running in one or more [Thundernetes](https://github.com/PlayFab/thundernetes) clusters. 
+
+## How to run
+To be able to connect to them, be sure to deploy the [gameserverapi](https://github.com/PlayFab/thundernetes/tree/main/cmd/gameserverapi) on each cluster. Then you have to define the following environment variable ```REACT_APP_GAMESERVERAPI_URL``` with a JSON like string with the following structure, but on a single line:
+
+```json
+REACT_APP_GAMESERVERAPI_URL='{
+  "cluster1": {
+    "api": "http://{manager_IP}:5001/api/v1/",
+    "allocate": "http://{gameserverapi_IP}:5000/api/v1/allocate"
+  },
+  "cluster2": {
+    "api": "http://{manager_IP}:5001/api/v1/",
+    "allocate": "http://{gameserverapi_IP}:5000/api/v1/allocate"
+  }
+}'
+ ```
+ If you wan to run this locally you can create a file called ```.env.development.local``` in the root of the project and define the environment variable there. Finally you can run the app with the ```npm start``` command.
 
 ## Available Scripts
 

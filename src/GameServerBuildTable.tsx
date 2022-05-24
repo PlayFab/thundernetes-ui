@@ -1,22 +1,13 @@
-import { useEffect, useState } from "react";
 import GameServerBuildTableItem from "./GameServerBuildTableItem";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { GameServerBuild } from "./types";
 
 interface GameServerBuildTableProps {
-  clusterApi: string
+  gsbList: Array<GameServerBuild>
 }
 
-function GameServerBuildTable({ clusterApi }: GameServerBuildTableProps) {
-  const [gsbList, setGsbList] = useState<Array<GameServerBuild>>([]);
-
-  useEffect(() => {
-    fetch(clusterApi + "gameserverbuilds")
-      .then(response => response.json())
-      .then(response => {console.log(response.items); setGsbList(response.items)})
-      .catch(err => {console.log(err); setGsbList([])});
-  }, [clusterApi]);
-
+function GameServerBuildTable({ gsbList }: GameServerBuildTableProps) {
+  gsbList = gsbList.sort((a: GameServerBuild, b: GameServerBuild) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
   let items = gsbList.map((gsb, index) => <GameServerBuildTableItem key={index} gsb={gsb} />);
   return (
     <TableContainer component={Paper}>

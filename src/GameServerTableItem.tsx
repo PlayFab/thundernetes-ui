@@ -10,8 +10,10 @@ function GameServerTableItem({ gs }: GameServerTableItemProps) {
     <TableRow>
       <TableCell>{gs.metadata.name}</TableCell>
       <TableCell>{gs.metadata.namespace}</TableCell>
-      <TableCell>{gs.status.state}</TableCell>
       <TableCell>{gs.status.health}</TableCell>
+      <TableCell>{gs.status.state}</TableCell>
+      <TableCell>{gs.status.publicIP}</TableCell>
+      <TableCell>{gs.status.ports}</TableCell>
     </TableRow>
   );
 }

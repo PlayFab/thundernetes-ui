@@ -6,7 +6,8 @@ interface GameServerBuildsSummaryProps {
 }
 
 function GameServerBuildsSummary({ perBuild }: GameServerBuildsSummaryProps) {
-  let items = Object.keys(perBuild).map((buildName, index) => <GameServerBuildsSummaryItem key={index} buildName={buildName} values={perBuild[buildName]} />);
+  let keys = Object.keys(perBuild).sort();
+  let items = keys.map((buildName, index) => <GameServerBuildsSummaryItem key={index} buildName={buildName} values={perBuild[buildName]} />);
   return (
     <TableContainer component={Paper} sx={{ marginBottom: "40px" }}>
       <Table sx={{ minWidth: 500 }} aria-label="simple table">

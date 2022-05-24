@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import ClustersSummary from "./ClustersSummary";
 import { GameServerBuild } from "./types";
@@ -43,7 +43,7 @@ interface HomeProps {
 function Home({ clusters }: HomeProps) {
   const [gsbMap, setGsbMap] = useState<Map<string, Array<GameServerBuild>>>(new Map());
 
-  useEffect(() => {
+  const getAllBuilds = useCallback(() => {
     let entries = Object.entries(clusters);
     entries.forEach((value) => {
       let [clusterName, endpoints] = value;
@@ -54,6 +54,12 @@ function Home({ clusters }: HomeProps) {
         .catch(err => { console.log(err); setGsbMap(prevGsbMap => new Map(prevGsbMap.set(clusterName, []))) });
     });
   }, [clusters]);
+
+  useEffect(() => {
+    getAllBuilds();
+    const interval = setInterval(getAllBuilds, 5000);
+    return () => clearInterval(interval);
+  }, [getAllBuilds]);
 
   const [total, perCluster, perBuild] = groupValues(gsbMap);
   return (
