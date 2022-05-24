@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
+import AllocateForm from "./AllocateForm";
 import GameServerBuildSpec from "./GameServerBuildSpec";
 import GameServerBuildStatus from "./GameServerBuildStatus"
 import GameServerTable from "./GameServerTable";
@@ -16,7 +17,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
   const params = useParams();
   const clusterName = params.clusterName?params.clusterName:"";
   const clusterApi = clusters[clusterName].api;
-
+  const allocateApi = clusters[clusterName].allocate;
   useEffect(() => {
     console.log(clusterApi+"gameserverbuilds/"+params.namespace+"/"+params.buildName);
     fetch(clusterApi+"gameserverbuilds/"+params.namespace+"/"+params.buildName)
@@ -41,6 +42,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
       <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
         Game Servers
       </Typography>
+      <Box><AllocateForm allocateApi={allocateApi} buildID={gsb.spec.buildID} /></Box>
       <Box><GameServerTable clusterApi={clusterApi} gsb={gsb} /></Box>
     </Box>
   );

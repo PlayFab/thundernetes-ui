@@ -30,9 +30,7 @@ function GameServerBuildSpec({ gsb, clusterApi }: GameServerBuildSpecProps) {
       standingBy: Math.floor(standingBy),
       max: Math.floor(max)
     }
-    console.log(JSON.stringify(patch));
-    console.log(clusterApi+"gameservers/"+gsb.metadata.namespace+"/"+gsb.metadata.name);
-    fetch(clusterApi+"gameserverbuilds/"+gsb.metadata.namespace+"/"+gsb.metadata.name,{
+    fetch(clusterApi+"gameserverbuilds/"+gsb.metadata.namespace+"/"+gsb.metadata.name, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
