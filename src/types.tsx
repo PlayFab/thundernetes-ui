@@ -30,7 +30,9 @@ interface GameServer {
   },
   status: {
     state: string,
-    health: string
+    health: string,
+    publicIP: string,
+    ports: string
   }
 }
 

@@ -4,7 +4,6 @@ import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 interface AllocateFormProps {
   allocateApi: string,
   buildID: string,
-
 }
 
 function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
@@ -12,13 +11,13 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
   const [assignedIP, setAssignedIP] = useState("");
   const [assignedPorts, setAssignedPorts] = useState("");
 
-  function handleChange(event: any) {
+  const handleChange = (event: any) => {
     if (event.target.name === "sessionID") {
       setSessionID(event.target.value);
     }
   }
 
-  function handleSubmit(event: any) {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
     const body = {
       sessionID: sessionID,

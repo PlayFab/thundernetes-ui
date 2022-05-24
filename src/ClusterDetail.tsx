@@ -1,16 +1,27 @@
+import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import GameServerBuildTable from "./GameServerBuildTable";
+import { GameServerBuild } from "./types";
 
 interface ClusterDetailProps {
   clusters: Record<string, Record<string, string>>
 }
 
 function ClusterDetail({ clusters }: ClusterDetailProps) {
+  const [gsbList, setGsbList] = useState<Array<GameServerBuild>>([]);
+
   const params = useParams();
-  const clusterName = params.clusterName?params.clusterName:"";
+  const clusterName = params.clusterName ? params.clusterName : "";
   const clusterApi = clusters[clusterName].api;
-  console.log(clusterApi);
+
+  useEffect(() => {
+    fetch(clusterApi + "gameserverbuilds")
+      .then(response => response.json())
+      .then(response => setGsbList(response.items))
+      .catch(err => { console.log(err); setGsbList([]) });
+  }, [clusterApi]);
+
   return (
     <Box>
       <Typography variant="h4" gutterBottom component="div">
@@ -19,7 +30,7 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
       <Typography variant="h6" gutterBottom component="div">
         Game Server Builds
       </Typography>
-      <GameServerBuildTable clusterApi={clusterApi} />
+      <GameServerBuildTable gsbList={gsbList} />
     </Box>
   );
 }

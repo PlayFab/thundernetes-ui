@@ -1,24 +1,13 @@
-import { useEffect, useState } from "react";
 import GameServerTableItem from "./GameServerTableItem";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
-import { GameServerBuild, GameServer } from "./types";
+import { GameServer } from "./types";
 
 interface GameServerTableProps {
-  clusterApi: string,
-  gsb: GameServerBuild
+  gsList: Array<GameServer>
 }
 
-function GameServerTable({ clusterApi, gsb }: GameServerTableProps) {
-  const [gsList, setGsList] = useState<Array<GameServer>>([]);
-
-  useEffect(() => {
-    let gsEndpoint = clusterApi + "gameserverbuilds/" + gsb.metadata.namespace + "/" + gsb.metadata.name + "/gameservers"
-    fetch(gsEndpoint)
-      .then(response => response.json())
-      .then(response => setGsList(response.items))
-      .catch(err => console.log(err));
-  }, [clusterApi, gsb.metadata.namespace, gsb.metadata.name]);
-
+function GameServerTable({ gsList }: GameServerTableProps) {
+  gsList = gsList.sort((a: GameServer, b: GameServer) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
   let items = gsList.map((gs, index) => <GameServerTableItem key={index} gs={gs} />);
   return (
     <TableContainer component={Paper}>
@@ -27,8 +16,10 @@ function GameServerTable({ clusterApi, gsb }: GameServerTableProps) {
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>Namespace</TableCell>
-            <TableCell>State</TableCell>
             <TableCell>Health</TableCell>
+            <TableCell>State</TableCell>
+            <TableCell>Public IP</TableCell>
+            <TableCell>Ports</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

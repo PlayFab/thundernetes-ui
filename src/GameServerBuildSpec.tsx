@@ -16,7 +16,7 @@ function GameServerBuildSpec({ gsb, clusterApi }: GameServerBuildSpecProps) {
     setStandingBy(gsb.spec.standingBy);
   }, [gsb.spec]);
 
-  function handleChange(event: any) {
+  const handleChange = (event: any) => {
     if (event.target.name === "max") {
       setMax(event.target.value);
     } else if (event.target.name === "standingBy") {
@@ -24,7 +24,7 @@ function GameServerBuildSpec({ gsb, clusterApi }: GameServerBuildSpecProps) {
     }
   }
 
-  function handleSubmit(event: any) {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
     const patch = {
       standingBy: Math.floor(standingBy),
@@ -36,7 +36,7 @@ function GameServerBuildSpec({ gsb, clusterApi }: GameServerBuildSpecProps) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(patch)
-    }).then(response => console.log(response));
+    });
   }
 
   return (
