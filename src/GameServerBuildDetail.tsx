@@ -36,11 +36,14 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
 
   useEffect(() => {
     getGameServerBuild();
-  }, [getGameServerBuild]);
-
-  useEffect(() => {
     getGameServers();
-  }, [getGameServers]);
+    const intervalGsb = setInterval(getGameServerBuild, 5000);
+    const intervalGs = setInterval(getGameServers, 5000);
+    return () => {
+      clearInterval(intervalGsb);
+      clearInterval(intervalGs);
+    };
+  }, [getGameServerBuild, getGameServers]);
 
   return (
     <Box>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import GameServerBuildTable from "./GameServerBuildTable";
@@ -15,12 +15,18 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
   const clusterName = params.clusterName ? params.clusterName : "";
   const clusterApi = clusters[clusterName].api;
 
-  useEffect(() => {
+  const getGameServerBuilds = useCallback(() => {
     fetch(clusterApi + "gameserverbuilds")
       .then(response => response.json())
       .then(response => setGsbList(response.items))
       .catch(err => { console.log(err); setGsbList([]) });
   }, [clusterApi]);
+
+  useEffect(() => {
+    getGameServerBuilds();
+    const interval = setInterval(getGameServerBuilds, 5000);
+    return () => clearInterval(interval);
+  }, [getGameServerBuilds]);
 
   return (
     <Box>
