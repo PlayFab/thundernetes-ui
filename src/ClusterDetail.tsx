@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import GameServerBuildTable from "./GameServerBuildTable";
 import { GameServerBuild } from "./types";
@@ -33,9 +34,20 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
       <Typography variant="h4" gutterBottom component="div">
         {clusterName}
       </Typography>
-      <Typography variant="h6" gutterBottom component="div">
-        Game Server Builds
-      </Typography>
+      <Grid container spacing={2} sx={{marginBottom: "20px"}}>
+        <Grid container item xs={6}>
+          <Typography variant="h6" gutterBottom component="div">
+            Game Server Builds
+          </Typography>
+        </Grid>
+        <Grid container item xs={6} justifyContent="flex-end">
+          <Link to="gsb/create" style={{textDecoration: "none"}}>
+          <Button variant="contained" color="primary">
+            Create
+          </Button>
+          </Link>
+        </Grid>
+      </Grid>
       <GameServerBuildTable gsbList={gsbList} />
     </Box>
   );

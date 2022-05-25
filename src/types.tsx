@@ -36,7 +36,7 @@ interface GameServer {
   }
 }
 
-const emptyGameServerBuild = {
+const emptyGameServerBuild: GameServerBuild = {
   apiVersion: "",
   kind: "",
   metadata: {
@@ -61,14 +61,16 @@ const emptyGameServerBuild = {
   }
 }
 
-const emtpyGameServer = {
+const emtpyGameServer: GameServer = {
   metadata: {
     name: "",
     namespace: ""
   },
   status: {
     state: "",
-    health: ""
+    health: "",
+    publicIP: "",
+    ports: ""
   }
 }
 
