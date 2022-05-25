@@ -17,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home clusters={clusters} />} />
           <Route path=":clusterName" element={<ClusterDetail clusters={clusters} />} />
+          <Route path=":clusterName/gsb/create" element={<h2>Create Game Server Build</h2>}/>
           <Route path=":clusterName/gsb/:namespace/:buildName" element={<GameServerBuildDetail clusters={clusters}/>} />
         </Routes>
       </Box>

@@ -32,11 +32,12 @@ interface GameServer {
     state: string,
     health: string,
     publicIP: string,
-    ports: string
+    ports: string,
+    nodeName: string
   }
 }
 
-const emptyGameServerBuild = {
+const emptyGameServerBuild: GameServerBuild = {
   apiVersion: "",
   kind: "",
   metadata: {
@@ -61,14 +62,17 @@ const emptyGameServerBuild = {
   }
 }
 
-const emtpyGameServer = {
+const emtpyGameServer: GameServer = {
   metadata: {
     name: "",
     namespace: ""
   },
   status: {
     state: "",
-    health: ""
+    health: "",
+    publicIP: "",
+    ports: "",
+    nodeName: ""
   }
 }
 
