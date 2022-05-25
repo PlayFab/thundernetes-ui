@@ -30,7 +30,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
   const getGameServerBuild = useCallback(() => {
     fetch(clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName)
       .then(response => response.json())
-      .then(response => { console.log(response); setGsb(response) })
+      .then(response => setGsb(response))
       .catch(err => setGsb(emptyGameServerBuild));
   }, [clusterApi, params.namespace, params.buildName]);
 

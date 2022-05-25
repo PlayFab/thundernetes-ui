@@ -32,7 +32,8 @@ interface GameServer {
     state: string,
     health: string,
     publicIP: string,
-    ports: string
+    ports: string,
+    nodeName: string
   }
 }
 
@@ -70,7 +71,8 @@ const emtpyGameServer: GameServer = {
     state: "",
     health: "",
     publicIP: "",
-    ports: ""
+    ports: "",
+    nodeName: ""
   }
 }
 
