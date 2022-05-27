@@ -8,12 +8,12 @@ To be able to connect to them, be sure to deploy the [gameserverapi](https://git
 ```json
 REACT_APP_GAMESERVERAPI_URL='{
   "cluster1": {
-    "api": "http://{manager_IP}:5001/api/v1/",
-    "allocate": "http://{gameserverapi_IP}:5000/api/v1/allocate"
+    "api": "http://{gameserverapi_IP}:5001/api/v1/",
+    "allocate": "http://{manager_IP}:5000/api/v1/allocate"
   },
   "cluster2": {
-    "api": "http://{manager_IP}:5001/api/v1/",
-    "allocate": "http://{gameserverapi_IP}:5000/api/v1/allocate"
+    "api": "http://{gameserverapi_IP}:5001/api/v1/",
+    "allocate": "http://{manager_IP}:5000/api/v1/allocate"
   }
 }'
  ```
