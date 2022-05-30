@@ -37,6 +37,17 @@ interface GameServer {
   }
 }
 
+interface GameServerDetail {
+  metadata: {
+    name: string,
+    namespace: string
+  },
+  spec: {
+    connectedPlayersCount: number,
+    connectedPlayers: Array<string>
+  }
+}
+
 const emptyGameServerBuild: GameServerBuild = {
   apiVersion: "",
   kind: "",
@@ -76,5 +87,5 @@ const emtpyGameServer: GameServer = {
   }
 }
 
-export type { GameServerBuild, GameServer };
+export type { GameServerBuild, GameServer, GameServerDetail };
 export { emptyGameServerBuild, emtpyGameServer };
