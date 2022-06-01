@@ -16,7 +16,7 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
 
   const params = useParams();
   const clusterName = params.clusterName ? params.clusterName : "";
-  const clusterApi = clusters[clusterName].api;
+  const clusterApi = clusters[clusterName] ? clusters[clusterName].api: "";
 
   const getGameServerBuilds = useCallback(() => {
     fetch(clusterApi + "gameserverbuilds")
@@ -28,7 +28,7 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
   const getGameServers = useCallback(() => {
     fetch(clusterApi + "gameservers")
       .then(response => response.json())
-      .then(response => { console.log(response.items); setGsList(response.items); })
+      .then(response => setGsList(response.items))
       .catch(err => { console.log(err); setGsList([]) });
   }, [clusterApi]);
 
