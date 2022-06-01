@@ -1,6 +1,5 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { createMemoryHistory } from "history";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { render, screen } from '@testing-library/react';
 import ClusterDetail from './ClusterDetail';
@@ -75,19 +74,13 @@ const server = setupServer(
   }),
 );
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
-it('shows a table with gameserverbuilds', async () => {
+beforeEach(() => {
   const testClusters: Record<string, Record<string, string>> = {
     cluster1: {
       api: "http://thundernetescluster1:5001/api/v1/",
       allocate: ""
     }
   };
-  const history = createMemoryHistory();
-  history.push('/cluster1');
   render(
     <MemoryRouter initialEntries={["/cluster1"]}>
       <Routes>
@@ -95,7 +88,12 @@ it('shows a table with gameserverbuilds', async () => {
       </Routes>
     </MemoryRouter>
   );
+});
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
+it('shows a table with gameserverbuilds', async () => {
   let gsbRowValuesString = gameServerBuildsResponse[0].metadata.name;
   gsbRowValuesString += " " + gameServerBuildsResponse[0].spec.buildID;
   gsbRowValuesString += " " + gameServerBuildsResponse[0].metadata.namespace;
@@ -103,37 +101,18 @@ it('shows a table with gameserverbuilds', async () => {
   gsbRowValuesString += " " + gameServerBuildsResponse[0].status.currentStandingByReadyDesired;
   gsbRowValuesString += " " + gameServerBuildsResponse[0].status.crashesCount;
   gsbRowValuesString += " " + gameServerBuildsResponse[0].status.health;
-  const gsbRowValuesRegex = new RegExp(gsbRowValuesString);
-  let gsbRow = await screen.findByRole("row",{name: gsbRowValuesRegex});
+  const gsbRow = await screen.findByRole("row", { name: new RegExp(gsbRowValuesString) });
   expect(gsbRow).toBeInTheDocument();
 });
 
 it('shows a table with nodes', async () => {
-  const testClusters: Record<string, Record<string, string>> = {
-    cluster1: {
-      api: "http://thundernetescluster1:5001/api/v1/",
-      allocate: ""
-    }
-  };
-  const history = createMemoryHistory();
-  history.push('/cluster1');
-  render(
-    <MemoryRouter initialEntries={["/cluster1"]}>
-      <Routes>
-        <Route path="/:clusterName" element={<ClusterDetail clusters={testClusters} />} />
-      </Routes>
-    </MemoryRouter>
-  );
-
   let nodeRowValuesString1 = gameServersResponse[0].status.nodeName;
   nodeRowValuesString1 += " 1 0";
-  const nodeRowValuesRegex1 = new RegExp(nodeRowValuesString1);
-  let nodeRow1 = await screen.findByRole("row",{name: nodeRowValuesRegex1});
+  const nodeRow1 = await screen.findByRole("row", { name: new RegExp(nodeRowValuesString1) });
   expect(nodeRow1).toBeInTheDocument();
 
   let nodeRowValuesString2 = gameServersResponse[1].status.nodeName;
   nodeRowValuesString2 += " 0 1";
-  const nodeRowValuesRegex2 = new RegExp(nodeRowValuesString2);
-  let nodeRow2 = await screen.findByRole("row",{name: nodeRowValuesRegex2});
+  const nodeRow2 = await screen.findByRole("row", { name: new RegExp(nodeRowValuesString2) });
   expect(nodeRow2).toBeInTheDocument();
 });
