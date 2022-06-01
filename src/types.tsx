@@ -87,5 +87,16 @@ const emtpyGameServer: GameServer = {
   }
 }
 
+const emptyGameServerDetail: GameServerDetail = {
+  metadata: {
+    name: "",
+    namespace: ""
+  },
+  spec: {
+    connectedPlayersCount: 0,
+    connectedPlayers: []
+  }
+}
+
 export type { GameServerBuild, GameServer, GameServerDetail };
-export { emptyGameServerBuild, emtpyGameServer };
+export { emptyGameServerBuild, emtpyGameServer, emptyGameServerDetail };
