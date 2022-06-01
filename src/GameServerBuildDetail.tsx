@@ -87,7 +87,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
 
   const nodeData = groupDataByNode(gsList);
   const gsdByName = groupDetailsByName(gsdList);
-  console.log(gsdByName);
+  
   return (
     <Box>
       <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
@@ -108,8 +108,8 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
       <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
         Game Servers
       </Typography>
-      <Box><AllocateForm allocateApi={allocateApi} buildID={gsb.spec.buildID} /></Box>
-      <Box><GameServerTable gsList={gsList} gsdByName={gsdByName}/></Box>
+      <Box><AllocateForm allocateApi={allocateApi} buildID={gsb.spec ? gsb.spec.buildID : ""} /></Box>
+      <Box><GameServerTable gsList={gsList} gsdByName={gsdByName} /></Box>
     </Box>
   );
 }

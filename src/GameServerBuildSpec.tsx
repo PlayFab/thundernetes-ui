@@ -12,8 +12,8 @@ function GameServerBuildSpec({ gsb, clusterApi }: GameServerBuildSpecProps) {
   const [standingBy, setStandingBy] = useState(0);
 
   useEffect(() => {
-    setMax(gsb.spec.max);
-    setStandingBy(gsb.spec.standingBy);
+    setMax(gsb.spec ? gsb.spec.max : 0);
+    setStandingBy(gsb.spec ? gsb.spec.standingBy : 0);
   }, [gsb.spec]);
 
   const handleChange = (event: any) => {
@@ -26,11 +26,14 @@ function GameServerBuildSpec({ gsb, clusterApi }: GameServerBuildSpecProps) {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
+    if (!gsb.metadata) {
+      return;
+    }
     const patch = {
       standingBy: Math.floor(standingBy),
       max: Math.floor(max)
     }
-    fetch(clusterApi+"gameserverbuilds/"+gsb.metadata.namespace+"/"+gsb.metadata.name, {
+    fetch(clusterApi + "gameserverbuilds/" + gsb.metadata.namespace + "/" + gsb.metadata.name, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
@@ -46,27 +49,27 @@ function GameServerBuildSpec({ gsb, clusterApi }: GameServerBuildSpecProps) {
           <TableBody>
             <TableRow>
               <TableCell><Typography>Build ID</Typography></TableCell>
-              <TableCell><Typography>{gsb.spec.buildID}</Typography></TableCell>
+              <TableCell><Typography>{gsb.spec ? gsb.spec.buildID : 0}</Typography></TableCell>
             </TableRow>
             <TableRow>
               <TableCell><Typography>StandingBy</Typography></TableCell>
               <TableCell>
-                <TextField name="standingBy" type="number" size="small" sx={{ width: 100 }} value={standingBy} onChange={handleChange} />
+                <TextField name="standingBy" type="number" id="standingBy" size="small" sx={{ width: 100 }} value={standingBy} onChange={handleChange} />
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell><Typography>Max</Typography></TableCell>
               <TableCell>
-                <TextField name="max" type="number" size="small" sx={{ width: 100 }} value={max} onChange={handleChange} />
+                <TextField name="max" type="number" id="max" size="small" sx={{ width: 100 }} value={max} onChange={handleChange} />
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell><Typography>Ports to Expose</Typography></TableCell>
-              <TableCell><Typography>{gsb.spec.portsToExpose}</Typography></TableCell>
+              <TableCell><Typography>{gsb.spec ? JSON.stringify(gsb.spec.portsToExpose) : ""}</Typography></TableCell>
             </TableRow>
             <TableRow>
-              <TableCell><Typography>Crashes to mark unhealthy</Typography></TableCell>
-              <TableCell><Typography>{gsb.spec.crashesToMarkUnhealthy}</Typography></TableCell>
+              <TableCell><Typography>Crashes to mark Unhealthy</Typography></TableCell>
+              <TableCell><Typography>{gsb.spec ? gsb.spec.crashesToMarkUnhealthy : 0}</Typography></TableCell>
             </TableRow>
           </TableBody>
         </Table>

@@ -19,14 +19,12 @@ function TotalSummary({ total }: TotalSummaryProps) {
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={4}>
           <Item>
-            <Typography>Total Standing By</Typography>
-            <Typography>{total.standingBy}</Typography>
+            <Typography>Total Standing By<br/>{total.standingBy}</Typography>
           </Item>
         </Grid>
         <Grid item xs={4}>
           <Item>
-            <Typography>Total Active</Typography>
-            <Typography>{total.active}</Typography>
+            <Typography>Total Active<br/>{total.active}</Typography>
           </Item>
         </Grid>
       </Grid>

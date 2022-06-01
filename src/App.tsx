@@ -7,7 +7,7 @@ import SideMenu from './SideMenu';
 import TopAppBar from './TopAppBar';
 
 function App() {
-  let clusters = JSON.parse(process.env.REACT_APP_GAMESERVERAPI_URL ? process.env.REACT_APP_GAMESERVERAPI_URL : "");
+  let clusters = JSON.parse(process.env.REACT_APP_GAMESERVERAPI_URL ? process.env.REACT_APP_GAMESERVERAPI_URL : "{}");
   return (
     <Box sx={{ display: 'flex' }}>
       <TopAppBar />
