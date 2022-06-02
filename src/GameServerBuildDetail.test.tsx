@@ -125,10 +125,12 @@ it('shows a table with gameserverbuild specs', async () => {
   const gsbBuildID = await screen.findByRole("row", { name: new RegExp(gsbBuildIDString) });
   expect(gsbBuildID).toBeInTheDocument();
 
-  const gsbStandingBy = await within(await screen.findByRole("row", { name: /^StandingBy/ })).findByDisplayValue(2);
+  const gsbStandingByString = "^StandingBy " + gameServerBuild.spec.standingBy;
+  const gsbStandingBy = await screen.findByRole("row", { name: new RegExp(gsbStandingByString) });
   expect(gsbStandingBy).toBeInTheDocument();
 
-  const gsbMax = await within(await screen.findByRole("row", { name: /^Max/ })).findByDisplayValue(4);
+  const gsbMaxString = "Max " + gameServerBuild.spec.max;
+  const gsbMax = await screen.findByRole("row", { name: new RegExp(gsbMaxString) });
   expect(gsbMax).toBeInTheDocument();
 
   let gsbPortsString = "Ports to Expose " + JSON.stringify(gameServerBuild.spec.portsToExpose);

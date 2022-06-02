@@ -1,6 +1,7 @@
+import React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Chip, Grid, Stack, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import GameServerBuildTable from "./GameServerBuildTable";
 import NodeTable from "./NodeTable";
@@ -13,23 +14,30 @@ interface ClusterDetailProps {
 function ClusterDetail({ clusters }: ClusterDetailProps) {
   const [gsList, setGsList] = useState<Array<GameServer>>([]);
   const [gsbList, setGsbList] = useState<Array<GameServerBuild>>([]);
+  const [apiError, setApiError] = useState<Error>();
 
   const params = useParams();
   const clusterName = params.clusterName ? params.clusterName : "";
-  const clusterApi = clusters[clusterName] ? clusters[clusterName].api: "";
+  const clusterApi = clusters[clusterName] ? clusters[clusterName].api : "";
 
   const getGameServerBuilds = useCallback(() => {
     fetch(clusterApi + "gameserverbuilds")
       .then(response => response.json())
       .then(response => setGsbList(response.items))
-      .catch(err => { console.log(err); setGsbList([]) });
+      .catch(err => {
+        setApiError(err);
+        setGsbList([]);
+      });
   }, [clusterApi]);
 
   const getGameServers = useCallback(() => {
     fetch(clusterApi + "gameservers")
       .then(response => response.json())
       .then(response => setGsList(response.items))
-      .catch(err => { console.log(err); setGsList([]) });
+      .catch(err => {
+        setApiError(err);
+        setGsList([]);
+      });
   }, [clusterApi]);
 
   const groupDataByNode = (gsList: Array<GameServer>) => {
@@ -59,38 +67,40 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
   }, [getGameServers, getGameServerBuilds]);
 
   const nodeData = groupDataByNode(gsList);
-  
+
   return (
-    <Box>
-      <Box sx={{ marginBottom: "20px" }}>
-        <Typography variant="h4" gutterBottom component="div">
-          {clusterName}
-        </Typography>
-      </Box>
-      <Box sx={{ marginBottom: "20px" }}>
-        <Grid container spacing={2}>
-          <Grid container item xs={6}>
-            <Typography variant="h6" gutterBottom component="div">
-              Game Server Builds
-            </Typography>
-          </Grid>
-          <Grid container item xs={6} justifyContent="flex-end">
-            <Link to="gsb/create" style={{ textDecoration: "none" }}>
-              <Button variant="contained" color="primary">
-                Create
-              </Button>
-            </Link>
-          </Grid>
+    <React.Fragment>
+      {(apiError) &&
+        <Box display="flex" justifyContent="center">
+          <Stack direction="column">
+            <Chip color="error" sx={{ marginBottom: "5px" }} variant="outlined"
+              label={"Couldn't reach cluster '" + clusterName + "' at: " + clusters[clusterName].api} />
+          </Stack>
+        </Box>
+      }
+      <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
+        {clusterName}
+      </Typography>
+      <Grid container spacing={2} sx={{ marginBottom: "20px" }}>
+        <Grid container item xs={6}>
+          <Typography variant="h6" gutterBottom component="div">
+            Game Server Builds
+          </Typography>
         </Grid>
-        <GameServerBuildTable gsbList={gsbList} />
-      </Box>
-      <Box sx={{ marginBottom: "20px" }}>
-        <Typography variant="h6" gutterBottom component="div">
-          Nodes
-        </Typography>
-        <NodeTable nodeData={nodeData} />
-      </Box>
-    </Box>
+        <Grid container item xs={6} justifyContent="flex-end">
+          <Link to="gsb/create" style={{ textDecoration: "none" }}>
+            <Button variant="contained" color="primary">
+              Create
+            </Button>
+          </Link>
+        </Grid>
+      </Grid>
+      <GameServerBuildTable gsbList={gsbList} />
+      <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
+        Nodes
+      </Typography>
+      <NodeTable nodeData={nodeData} />
+    </React.Fragment>
   );
 }
 

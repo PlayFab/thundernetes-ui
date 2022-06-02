@@ -1,5 +1,6 @@
+import React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Chip, Stack, Typography } from "@mui/material";
 import ClustersSummary from "./ClustersSummary";
 import { GameServerBuild } from "./types";
 import GameServerBuildsSummary from "./GameServerBuildsSummary";
@@ -37,11 +38,12 @@ const groupValues = (data: Map<string, Array<GameServerBuild>>): [Record<string,
 }
 
 interface HomeProps {
-  clusters: Record<string, Record<string,string>>
+  clusters: Record<string, Record<string, string>>
 }
 
 function Home({ clusters }: HomeProps) {
   const [gsbMap, setGsbMap] = useState<Map<string, Array<GameServerBuild>>>(new Map());
+  const [unreachedClusters, setUnreachedClusters] = useState<Set<string>>(new Set());
 
   const getAllBuilds = useCallback(() => {
     let entries = Object.entries(clusters);
@@ -51,7 +53,10 @@ function Home({ clusters }: HomeProps) {
       fetch(clusterApi + "gameserverbuilds")
         .then(response => response.json())
         .then(response => setGsbMap(prevGsbMap => new Map(prevGsbMap.set(clusterName, response.items))))
-        .catch(err => { console.log(err); setGsbMap(prevGsbMap => new Map(prevGsbMap.set(clusterName, []))) });
+        .catch(err => {
+          setGsbMap(prevGsbMap => new Map(prevGsbMap.set(clusterName, [])));
+          setUnreachedClusters(prev => new Set(prev.add(clusterName)));
+        });
     });
   }, [clusters]);
 
@@ -62,8 +67,20 @@ function Home({ clusters }: HomeProps) {
   }, [getAllBuilds]);
 
   const [total, perCluster, perBuild] = groupValues(gsbMap);
+  const unreachedClustersArray = Array.from(unreachedClusters).sort()
+  const unreachedClusterMessages = unreachedClustersArray.map((clusterName) =>
+    <Chip key={clusterName} color="error" sx={{ marginBottom: "5px" }} variant="outlined"
+      label={"Couldn't reach cluster '" + clusterName + "' at: " + clusters[clusterName].api} />
+  );
   return (
-    <Box>
+    <React.Fragment>
+      {(unreachedClusters) &&
+        <Box display="flex" justifyContent="center">
+          <Stack direction="column">
+            {unreachedClusterMessages}
+          </Stack>
+        </Box>
+      }
       <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
         Summary
       </Typography>
@@ -76,7 +93,7 @@ function Home({ clusters }: HomeProps) {
         Builds
       </Typography>
       <GameServerBuildsSummary perBuild={perBuild} />
-    </Box>
+    </React.Fragment>
   );
 }
 
