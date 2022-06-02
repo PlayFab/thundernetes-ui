@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, Grid, TextField } from "@mui/material";
+import { Button, Grid, TextField } from "@mui/material";
 import { GameServerBuild } from "./types";
 
 interface SpecFormProps {
@@ -36,8 +36,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Box sx={{ flexGrow: 1, marginBottom: "40px" }}>
-        <Grid container justifyContent="left" spacing={2}>
+        <Grid container justifyContent="left" spacing={2} sx={{ flexGrow: 1, marginBottom: "40px" }}>
           <Grid item xs={2}>
             <TextField name="standingBy" type="number" id="standingBy" size="small" label="StandingBy" value={standingBy} onChange={handleChange} />
           </Grid>
@@ -50,7 +49,6 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
             </Button>
           </Grid>
         </Grid>
-      </Box>
     </form>
   );
 }

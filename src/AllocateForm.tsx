@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Button, Grid, TextField, Typography } from "@mui/material";
 
 interface AllocateFormProps {
   allocateApi: string,
@@ -35,8 +35,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Box sx={{ flexGrow: 1, marginBottom: "40px" }}>
-        <Grid container justifyContent="left" spacing={2}>
+        <Grid container justifyContent="left" spacing={2} sx={{ flexGrow: 1, marginBottom: "40px" }}>
           <Grid item xs={5}>
             <TextField fullWidth name="sessionID" size="small" label="SessionID" value={sessionID} onChange={handleChange} />
           </Grid>
@@ -51,7 +50,6 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
             </Grid>
           }
         </Grid>
-      </Box>
     </form>
   );
 }

@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Grid, Paper, Typography } from "@mui/material";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -15,8 +15,7 @@ interface TotalSummaryProps {
 
 function TotalSummary({ total }: TotalSummaryProps) {
   return (
-    <Box sx={{ flexGrow: 1, marginBottom: "40px" }}>
-      <Grid container justifyContent="center" spacing={2}>
+      <Grid container justifyContent="center" spacing={2} sx={{ flexGrow: 1, marginBottom: "40px" }}>
         <Grid item xs={4}>
           <Item>
             <Typography>Total Standing By<br/>{total.standingBy}</Typography>
@@ -28,7 +27,6 @@ function TotalSummary({ total }: TotalSummaryProps) {
           </Item>
         </Grid>
       </Grid>
-    </Box>
   );
 }
 
