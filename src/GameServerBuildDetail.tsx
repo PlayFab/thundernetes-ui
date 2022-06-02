@@ -6,6 +6,7 @@ import GameServerBuildSpec from "./GameServerBuildSpec";
 import GameServerBuildStatus from "./GameServerBuildStatus"
 import GameServerTable from "./GameServerTable";
 import NodeTable from "./NodeTable";
+import SpecForm from "./SpecForm";
 import { emptyGameServerBuild, GameServerBuild, GameServer, GameServerDetail } from "./types";
 
 interface GameServerBuildDetailProps {
@@ -96,7 +97,11 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
       <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
         Specs
       </Typography>
-      <Box sx={{ marginBottom: "40px" }}><GameServerBuildSpec clusterApi={clusterApi} gsb={gsb} /></Box>
+      <Box sx={{ marginBottom: "40px" }}><GameServerBuildSpec gsb={gsb} /></Box>
+      <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
+        Patch Specs
+      </Typography>
+      <Box sx={{ marginBottom: "40px" }}><SpecForm clusterApi={clusterApi} gsb={gsb} /></Box>
       <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
         Status
       </Typography>

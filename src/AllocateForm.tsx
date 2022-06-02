@@ -38,11 +38,10 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
       <Box sx={{ flexGrow: 1, marginBottom: "40px" }}>
         <Grid container justifyContent="left" spacing={2}>
           <Grid item xs={5}>
-            <Typography>Session ID</Typography>
-            <TextField fullWidth name="sessionID" size="small" value={sessionID} onChange={handleChange} />
+            <TextField fullWidth name="sessionID" size="small" label="SessionID" value={sessionID} onChange={handleChange} />
           </Grid>
           <Grid item xs={7}>
-            <Button variant="contained" color="primary" type="submit" sx={{ marginTop: "25px" }}>
+            <Button variant="contained" color="primary" type="submit">
               Allocate
             </Button>
           </Grid>
