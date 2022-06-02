@@ -76,26 +76,23 @@ function Home({ clusters }: HomeProps) {
     <React.Fragment>
       {(unreachedClusters) &&
         <Box display="flex" justifyContent="center">
-          <Stack direction="column" width="50%">
+          <Stack direction="column">
             {unreachedClusterMessages}
           </Stack>
         </Box>
       }
-      {(unreachedClusters.size < Object.keys(clusters).length) &&
-        <React.Fragment>
-          <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
-            Summary
-          </Typography>
-          <TotalSummary total={total} />
-          <Typography variant="h5" gutterBottom component="div">
-            Clusters
-          </Typography>
-          <ClustersSummary perCluster={perCluster} />
-          <Typography variant="h5" gutterBottom component="div">
-            Builds
-          </Typography>
-          <GameServerBuildsSummary perBuild={perBuild} />
-        </React.Fragment>}
+      <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
+        Summary
+      </Typography>
+      <TotalSummary total={total} />
+      <Typography variant="h5" gutterBottom component="div">
+        Clusters
+      </Typography>
+      <ClustersSummary perCluster={perCluster} />
+      <Typography variant="h5" gutterBottom component="div">
+        Builds
+      </Typography>
+      <GameServerBuildsSummary perBuild={perBuild} />
     </React.Fragment>
   );
 }
