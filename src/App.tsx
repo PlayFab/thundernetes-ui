@@ -8,7 +8,6 @@ import TopAppBar from './Common/TopAppBar';
 import clusters from './clusters.json';
 
 function App() {
-  console.log(clusters)
   return (
     <Box sx={{ display: 'flex' }}>
       <TopAppBar />
