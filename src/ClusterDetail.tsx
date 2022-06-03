@@ -81,10 +81,10 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
       <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
         {clusterName}
       </Typography>
-      <Grid container spacing={2} sx={{ marginBottom: "20px" }}>
+      <Grid container spacing={2}>
         <Grid container item xs={6}>
-          <Typography variant="h6" gutterBottom component="div">
-            Game Server Builds
+          <Typography variant="h5" gutterBottom component="div">
+            Builds
           </Typography>
         </Grid>
         <Grid container item xs={6} justifyContent="flex-end">
@@ -95,8 +95,10 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
           </Link>
         </Grid>
       </Grid>
-      <GameServerBuildTable gsbList={gsbList} />
-      <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
+      <Box sx={{ marginBottom: "30px" }}>
+        <GameServerBuildTable gsbList={gsbList} />
+      </Box>
+      <Typography variant="h5" gutterBottom component="div">
         Nodes
       </Typography>
       <NodeTable nodeData={nodeData} />

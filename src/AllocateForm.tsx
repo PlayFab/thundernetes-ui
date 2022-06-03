@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Box, Button, Chip, Grid, Stack, TextField, Typography } from "@mui/material";
+import { Done } from "@mui/icons-material";
 
 interface AllocateFormProps {
   allocateApi: string,
@@ -11,7 +12,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
   const [assignedIP, setAssignedIP] = useState("");
   const [assignedPorts, setAssignedPorts] = useState("");
   const [allocateError, setAllocateError] = useState<Error>();
-  const [requestDenied, setRequestDenied] = useState(false);
+  const [requestAccepted, setRequestAccepted] = useState<boolean>();
 
   const handleChange = (event: any) => {
     if (event.target.name === "sessionID") {
@@ -33,9 +34,10 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
       body: JSON.stringify(body)
     }).then(response => {
       if (response.status === 200) {
+        setRequestAccepted(true);
         return response.json();
       } else {
-        setRequestDenied(true);
+        setRequestAccepted(false);
         return undefined;
       }
     }).then(response => {
@@ -54,12 +56,22 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
         <Grid item xs={5}>
           <TextField fullWidth name="sessionID" size="small" label="SessionID" value={sessionID} onChange={handleChange} />
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={1}>
+          <Button sx={{ paddingLeft:"8px", paddingRight:"8px" }} variant="contained" color="primary" onClick={() => setSessionID(crypto.randomUUID())}>
+            {"New ID"}
+          </Button>
+        </Grid>
+        <Grid item xs={1}>
           <Button variant="contained" color="primary" type="submit">
             Allocate
           </Button>
         </Grid>
-        {(!allocateError && !requestDenied &&assignedIP && assignedPorts) &&
+        {(requestAccepted) &&
+          <Grid item xs={1}>
+            <Done color="success" sx={{marginTop: "5px"}} />
+          </Grid>
+        }
+        {(!allocateError && !requestAccepted &&assignedIP && assignedPorts) &&
           <Grid item xs={12}>
             <Typography>IP={assignedIP}, Port={assignedPorts}</Typography>
           </Grid>
@@ -74,7 +86,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
             </Box>
           </Grid>
         }
-        {(requestDenied) &&
+        {(!requestAccepted && requestAccepted !== undefined) &&
           <Grid item xs={12}>
             <Box display="flex" justifyContent="left">
               <Stack direction="column">

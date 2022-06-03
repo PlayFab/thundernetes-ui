@@ -19,6 +19,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
   const [gsList, setGsList] = useState<Array<GameServer>>([]);
   const [gsdList, setGsdList] = useState<Array<GameServerDetail>>([]);
   const [apiError, setApiError] = useState<Error>();
+  const [gsbFound, setGsbFound] = useState<boolean>();
 
   const params = useParams();
   const clusterName = params.clusterName ? params.clusterName : "";
@@ -36,8 +37,10 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
     fetch(clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName)
       .then(response => {
         if (response.status === 200) {
+          setGsbFound(true);
           return response.json();
         } else if (response.status === 404) {
+          setGsbFound(false);
           return undefined;
         }
       })
@@ -107,7 +110,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
           </Stack>
         </Box>
       }
-      {(!gsb && !apiError) &&
+      {(!gsbFound && gsbFound !== undefined) &&
         <Box display="flex" justifyContent="center">
           <Stack direction="column">
             <Chip color="error" sx={{ marginBottom: "5px" }} variant="outlined"
@@ -118,7 +121,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
       {(gsb) &&
         <React.Fragment>
           <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
-            {gsb.metadata.namespace + "/" + gsb.metadata.name}
+            { clusterName + ": " + gsb.metadata.namespace + "/" + gsb.metadata.name}
           </Typography>
           <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
             Specs
