@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Button, Chip, Grid, Stack, TextField } from "@mui/material";
 import { Done } from "@mui/icons-material";
-import { GameServerBuild } from "./types";
+import { GameServerBuild } from "../types";
 
 interface SpecFormProps {
   clusterApi: string,

@@ -2,8 +2,8 @@ import { rest } from "msw";
 import { setupServer } from "msw/node";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { render, screen } from '@testing-library/react';
-import ClusterDetail from './ClusterDetail';
-import { GameServer, GameServerBuild } from "./types";
+import ClusterDetail from '../ClusterDetail/ClusterDetail';
+import { GameServer, GameServerBuild } from "../types";
 
 const gameServerBuilds: Array<GameServerBuild> = [
   {

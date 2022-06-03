@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { Box, Button, Chip, Grid, Stack, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import GameServerBuildTable from "./GameServerBuildTable";
-import NodeTable from "./NodeTable";
-import { GameServer, GameServerBuild } from "./types";
+import NodeTable from "../Common/NodeTable";
+import { GameServer, GameServerBuild } from "../types";
 
 interface ClusterDetailProps {
   clusters: Record<string, Record<string, string>>

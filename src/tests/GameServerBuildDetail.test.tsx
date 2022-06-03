@@ -3,8 +3,8 @@ import { setupServer } from "msw/node";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { within } from "@testing-library/dom"
 import { render, screen } from '@testing-library/react';
-import GameServerBuildDetail from "./GameServerBuildDetail";
-import { GameServer, GameServerBuild, GameServerDetail } from "./types";
+import GameServerBuildDetail from "../GameServerBuildDetail/GameServerBuildDetail";
+import { GameServer, GameServerBuild, GameServerDetail } from "../types";
 
 const gameServerBuild: GameServerBuild = {
   apiVersion: "",

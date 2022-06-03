@@ -1,6 +1,6 @@
 import GameServerTableItem from "./GameServerTableItem";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
-import { GameServer } from "./types";
+import { GameServer } from "../types";
 
 interface GameServerTableProps {
   gsList: Array<GameServer>,

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { TableCell, TableRow } from "@mui/material";
-import { GameServerBuild } from "./types";
+import { GameServerBuild } from "../types";
 
 interface GameServerBuildTableItemProps {
   gsb: GameServerBuild

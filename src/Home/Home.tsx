@@ -2,7 +2,7 @@ import React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import ClustersSummary from "./ClustersSummary";
-import { GameServerBuild } from "./types";
+import { GameServerBuild } from "../types";
 import GameServerBuildsSummary from "./GameServerBuildsSummary";
 import TotalSummary from "./TotalSummary";
 

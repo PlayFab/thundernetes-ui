@@ -6,9 +6,9 @@ import AllocateForm from "./AllocateForm";
 import GameServerBuildSpec from "./GameServerBuildSpec";
 import GameServerBuildStatus from "./GameServerBuildStatus"
 import GameServerTable from "./GameServerTable";
-import NodeTable from "./NodeTable";
+import NodeTable from "../Common/NodeTable";
 import SpecForm from "./SpecForm";
-import { GameServerBuild, GameServer, GameServerDetail } from "./types";
+import { GameServerBuild, GameServer, GameServerDetail } from "../types";
 
 interface GameServerBuildDetailProps {
   clusters: Record<string, Record<string, string>>
