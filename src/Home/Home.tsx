@@ -5,6 +5,7 @@ import ClustersSummary from "./ClustersSummary";
 import { GameServerBuild } from "../types";
 import GameServerBuildsSummary from "./GameServerBuildsSummary";
 import TotalSummary from "./TotalSummary";
+import { fetchWithTimeout } from "../utils";
 
 const groupValues = (data: Map<string, Array<GameServerBuild>>): [Record<string, number>, Record<string, Record<string, number>>, Record<string, Record<string, number>>] => {
   function emptyValues() {
@@ -50,7 +51,7 @@ function Home({ clusters }: HomeProps) {
     entries.forEach((value) => {
       let [clusterName, endpoints] = value;
       let clusterApi = endpoints.api;
-      fetch(clusterApi + "gameserverbuilds")
+      fetchWithTimeout(clusterApi + "gameserverbuilds", { timeout: 5000 })
         .then(response => response.json())
         .then(response => setGsbMap(prevGsbMap => new Map(prevGsbMap.set(clusterName, response.items))))
         .catch(err => {

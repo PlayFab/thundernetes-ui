@@ -99,7 +99,6 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
 
   const nodeData = groupDataByNode(gsList);
   const gsdByName = groupDetailsByName(gsdList);
-
   return (
     <React.Fragment>
       {(apiError) &&
@@ -121,7 +120,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
       {(gsb) &&
         <React.Fragment>
           <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
-            { clusterName + ": " + gsb.metadata.namespace + "/" + gsb.metadata.name}
+            {clusterName + ": " + gsb.metadata.namespace + "/" + gsb.metadata.name}
           </Typography>
           <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
             Specs

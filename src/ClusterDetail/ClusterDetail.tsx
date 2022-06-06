@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import GameServerBuildTable from "./GameServerBuildTable";
 import NodeTable from "../Common/NodeTable";
 import { GameServer, GameServerBuild } from "../types";
+import { fetchWithTimeout } from "../utils";
 
 interface ClusterDetailProps {
   clusters: Record<string, Record<string, string>>
@@ -14,31 +15,29 @@ interface ClusterDetailProps {
 function ClusterDetail({ clusters }: ClusterDetailProps) {
   const [gsList, setGsList] = useState<Array<GameServer>>([]);
   const [gsbList, setGsbList] = useState<Array<GameServerBuild>>([]);
-  const [apiError, setApiError] = useState<Error>();
+  const [apiError, setApiError] = useState<string>();
 
   const params = useParams();
   const clusterName = params.clusterName ? params.clusterName : "";
   const clusterApi = clusters[clusterName] ? clusters[clusterName].api : "";
 
   const getGameServerBuilds = useCallback(() => {
-    fetch(clusterApi + "gameserverbuilds")
+    fetchWithTimeout(clusterApi + "gameserverbuilds", { timeout: 5000 })
       .then(response => response.json())
       .then(response => setGsbList(response.items))
       .catch(err => {
-        setApiError(err);
-        setGsbList([]);
+        setApiError(clusterName);
       });
-  }, [clusterApi]);
+  }, [clusterName, clusterApi]);
 
   const getGameServers = useCallback(() => {
-    fetch(clusterApi + "gameservers")
+    fetchWithTimeout(clusterApi + "gameservers", { timeout: 5000 })
       .then(response => response.json())
       .then(response => setGsList(response.items))
       .catch(err => {
-        setApiError(err);
-        setGsList([]);
+        setApiError(clusterName);
       });
-  }, [clusterApi]);
+  }, [clusterName, clusterApi]);
 
   const groupDataByNode = (gsList: Array<GameServer>) => {
     const emptyValues = () => {
@@ -63,14 +62,20 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
     getGameServerBuilds();
     const gsInterval = setInterval(getGameServers, 5000);
     const gsbInterval = setInterval(getGameServerBuilds, 5000);
-    return () => { clearInterval(gsInterval); clearInterval(gsbInterval); };
+    return () => {
+      clearInterval(gsInterval);
+      clearInterval(gsbInterval);
+      setGsList([]);
+      setGsbList([]);
+      setApiError(undefined);
+    };
   }, [getGameServers, getGameServerBuilds]);
 
   const nodeData = groupDataByNode(gsList);
 
   return (
     <React.Fragment>
-      {(apiError) &&
+      {(apiError && apiError === clusterName) &&
         <Box display="flex" justifyContent="center">
           <Stack direction="column">
             <Chip color="error" sx={{ marginBottom: "5px" }} variant="outlined"
