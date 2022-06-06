@@ -11,7 +11,7 @@ interface GameServerTableProps {
 
 function GameServerTable({ gsList, gsdByName }: GameServerTableProps) {
   const [page, setPage] = useState(0);
-  const rowsPerPage =10;
+  const rowsPerPage = 10;
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - gsList.length) : 0;
@@ -40,7 +40,7 @@ function GameServerTable({ gsList, gsdByName }: GameServerTableProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-        {(rowsPerPage > 0
+          {(rowsPerPage > 0
             ? items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : items
           )}
