@@ -62,6 +62,9 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
     }
     const nodeData: Record<string, Record<string, number>> = {}
     gsList.forEach((gs) => {
+      if (!gs.status.nodeName) {
+        return;
+      }
       if (!nodeData[gs.status.nodeName]) {
         nodeData[gs.status.nodeName] = emptyValues();
       }
