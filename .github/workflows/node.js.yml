@@ -26,7 +26,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: ping src/clusters.json && echo "{}\n" > src/clusters.json
+    - run: touch src/clusters.json && echo "{}\n" > src/clusters.json
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
