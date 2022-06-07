@@ -25,10 +25,10 @@ function ListItemLink(props: ListItemLinkProps) {
   return (
     <li>
       <Tooltip title={primary} placement="right">
-      <ListItem button component={renderLink}>
-        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
-        <ListItemText primary={<Typography noWrap>{primary}</Typography>} />
-      </ListItem>
+        <ListItem button component={renderLink}>
+          {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+          <ListItemText primary={<Typography noWrap>{primary}</Typography>} />
+        </ListItem>
       </Tooltip>
     </li>
   );

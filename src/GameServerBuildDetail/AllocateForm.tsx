@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Alert, Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { Done } from "@mui/icons-material";
+import React, { useState } from "react";
+import { Alert, Box, Button, Grid, IconButton, InputAdornment, TextField, Tooltip } from "@mui/material";
+import { ContentCopy, Done } from "@mui/icons-material";
 
 interface AllocateFormProps {
   allocateApi: string,
@@ -71,10 +71,59 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
             <Done color="success" sx={{ marginTop: "5px" }} />
           </Grid>
         }
+        <Grid item xs={4} />
         {(!allocateError && !requestAccepted && assignedIP && assignedPorts) &&
-          <Grid item xs={12}>
-            <Typography>IP={assignedIP}, Port={assignedPorts}</Typography>
-          </Grid>
+          <React.Fragment>
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                disabled
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip title={"Copy value"} placement="right">
+                        <IconButton
+                          edge="end"
+                          onClick={() => navigator.clipboard.writeText(assignedIP)}
+                        >
+                          <ContentCopy />
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
+                name="assignedIP"
+                size="small"
+                label="Assigned IP"
+                value={assignedIP}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <TextField
+                fullWidth
+                disabled
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip title={"Copy value"} placement="right">
+                        <IconButton
+                          edge="end"
+                          onClick={() => navigator.clipboard.writeText(assignedPorts)}
+                        >
+                          <ContentCopy />
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
+                name="assignedPorts"
+                size="small"
+                label="Assigned Ports"
+                value={assignedPorts}
+              />
+            </Grid>
+            <Grid item xs={7} />
+          </React.Fragment>
         }
         {(allocateError) &&
           <Grid item xs={12}>
