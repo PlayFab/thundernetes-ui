@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, Chip, Grid, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { Done } from "@mui/icons-material";
 
 interface AllocateFormProps {
@@ -57,7 +57,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
           <TextField fullWidth name="sessionID" size="small" label="SessionID" value={sessionID} onChange={handleChange} />
         </Grid>
         <Grid item xs={1}>
-          <Button sx={{ paddingLeft:"8px", paddingRight:"8px" }} variant="contained" color="primary" onClick={() => setSessionID(crypto.randomUUID())}>
+          <Button sx={{ paddingLeft: "8px", paddingRight: "8px" }} variant="contained" color="primary" onClick={() => setSessionID(crypto.randomUUID())}>
             {"New ID"}
           </Button>
         </Grid>
@@ -68,10 +68,10 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
         </Grid>
         {(requestAccepted) &&
           <Grid item xs={1}>
-            <Done color="success" sx={{marginTop: "5px"}} />
+            <Done color="success" sx={{ marginTop: "5px" }} />
           </Grid>
         }
-        {(!allocateError && !requestAccepted &&assignedIP && assignedPorts) &&
+        {(!allocateError && !requestAccepted && assignedIP && assignedPorts) &&
           <Grid item xs={12}>
             <Typography>IP={assignedIP}, Port={assignedPorts}</Typography>
           </Grid>
@@ -79,20 +79,18 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
         {(allocateError) &&
           <Grid item xs={12}>
             <Box display="flex" justifyContent="left">
-              <Stack direction="column">
-                <Chip color="error" sx={{ marginBottom: "5px" }} variant="outlined"
-                  label={"Couldn't reach allocation endpoint at: " + allocateApi} />
-              </Stack>
+              <Alert severity="error" onClose={() => { setAllocateError(undefined) }}>
+                {"Couldn't reach allocation endpoint at: " + allocateApi}
+              </Alert>
             </Box>
           </Grid>
         }
         {(!requestAccepted && requestAccepted !== undefined) &&
           <Grid item xs={12}>
             <Box display="flex" justifyContent="left">
-              <Stack direction="column">
-                <Chip color="error" sx={{ marginBottom: "5px" }} variant="outlined"
-                  label={"Allocation endpoint denied the request at: " + allocateApi} />
-              </Stack>
+              <Alert severity="error" onClose={() => { setRequestAccepted(undefined) }}>
+                {"Allocation endpoint denied the request at: " + allocateApi}
+              </Alert>
             </Box>
           </Grid>
         }

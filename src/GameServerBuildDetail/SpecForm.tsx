@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Box, Button, Chip, Grid, Stack, TextField } from "@mui/material";
+import { Alert, Box, Button, Grid, TextField } from "@mui/material";
 import { Done } from "@mui/icons-material";
 import { GameServerBuild } from "../types";
+import { fetchWithTimeout } from "../utils";
 
 interface SpecFormProps {
   clusterApi: string,
@@ -9,10 +10,11 @@ interface SpecFormProps {
 }
 
 function SpecForm({ clusterApi, gsb }: SpecFormProps) {
-  const [max, setMax] = useState(0);
-  const [standingBy, setStandingBy] = useState(0);
-  const [allocateError, setAllocateError] = useState<Error>();
+  const [max, setMax] = useState<number>();
+  const [standingBy, setStandingBy] = useState<number>();
+  const [allocateError, setAllocateError] = useState<string>();
   const [requestAccepted, setRequestAccepted] = useState<boolean>();
+  const [valueError, setValueError] = useState<Error>();
 
   const handleChange = (event: any) => {
     if (event.target.name === "max") {
@@ -24,11 +26,22 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
+    setAllocateError(undefined);
+    setRequestAccepted(undefined);
+    setValueError(undefined);
+    if (standingBy === undefined || max === undefined) {
+      setValueError(new Error("standingBy and max values cannot be empty"));
+      return;
+    } else if (standingBy > max) {
+      setValueError(new Error("standingBy cannot be more than max"));
+      return;
+    }
     const patch = {
       standingBy: Math.floor(standingBy),
       max: Math.floor(max)
     }
-    fetch(clusterApi + "gameserverbuilds/" + gsb.metadata.namespace + "/" + gsb.metadata.name, {
+    fetchWithTimeout(clusterApi + "gameserverbuilds/" + gsb.metadata.namespace + "/" + gsb.metadata.name, {
+      timeout: 5000,
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
@@ -41,7 +54,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
         setRequestAccepted(false);
       }
     }).catch(err => {
-      setAllocateError(err);
+      setAllocateError(clusterApi);
     });
   }
 
@@ -59,28 +72,35 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
             Patch
           </Button>
         </Grid>
-        {(requestAccepted) &&
-          <Grid item xs={1}>
-            <Done color="success" sx={{marginTop: "5px"}} />
-          </Grid>
-        }
-        {(allocateError) &&
+        {(valueError) &&
           <Grid item xs={12}>
             <Box display="flex" justifyContent="left">
-              <Stack direction="column">
-                <Chip color="error" sx={{ marginBottom: "5px" }} variant="outlined"
-                  label={"Couldn't reach API at: " + clusterApi} />
-              </Stack>
+              <Alert severity="error" onClose={() => { setValueError(undefined) }}>
+                {valueError.message}
+              </Alert>
+            </Box>
+          </Grid>
+        }
+        {(requestAccepted) &&
+          <Grid item xs={1}>
+            <Done color="success" sx={{ marginTop: "5px" }} />
+          </Grid>
+        }
+        {(allocateError && allocateError === clusterApi) &&
+          <Grid item xs={12}>
+            <Box display="flex" justifyContent="left">
+              <Alert severity="error" onClose={() => { setAllocateError(undefined) }}>
+                {"Couldn't reach API at: " + clusterApi}
+              </Alert>
             </Box>
           </Grid>
         }
         {(!requestAccepted && requestAccepted !== undefined) &&
           <Grid item xs={12}>
             <Box display="flex" justifyContent="left">
-              <Stack direction="column">
-                <Chip color="error" sx={{ marginBottom: "5px" }} variant="outlined"
-                  label={"API denied the request at: " + clusterApi} />
-              </Stack>
+              <Alert severity="error" onClose={() => { setRequestAccepted(undefined) }}>
+                {"API denied the request at: " + clusterApi}
+              </Alert>
             </Box>
           </Grid>
         }

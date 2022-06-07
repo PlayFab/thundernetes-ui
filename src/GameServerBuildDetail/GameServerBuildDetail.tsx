@@ -1,7 +1,7 @@
 import React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Chip, Stack, Typography } from "@mui/material";
+import { Alert, Box, Typography } from "@mui/material";
 import AllocateForm from "./AllocateForm";
 import GameServerBuildSpec from "./GameServerBuildSpec";
 import GameServerBuildStatus from "./GameServerBuildStatus"
@@ -9,6 +9,7 @@ import GameServerTable from "./GameServerTable";
 import NodeTable from "../Common/NodeTable";
 import SpecForm from "./SpecForm";
 import { GameServerBuild, GameServer, GameServerDetail } from "../types";
+import { fetchWithTimeout } from "../utils";
 
 interface GameServerBuildDetailProps {
   clusters: Record<string, Record<string, string>>
@@ -18,7 +19,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
   const [gsb, setGsb] = useState<GameServerBuild>();
   const [gsList, setGsList] = useState<Array<GameServer>>([]);
   const [gsdList, setGsdList] = useState<Array<GameServerDetail>>([]);
-  const [apiError, setApiError] = useState<Error>();
+  const [apiError, setApiError] = useState<string>();
   const [gsbFound, setGsbFound] = useState<boolean>();
 
   const params = useParams();
@@ -27,14 +28,14 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
   const allocateApi = clusters[clusterName].allocate;
 
   const getGameServers = useCallback(() => {
-    fetch(clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName + "/gameservers")
+    fetchWithTimeout(clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName + "/gameservers", { timeout: 5000 })
       .then(response => response.json())
       .then(response => setGsList(response.items))
-      .catch(err => setApiError(err));
+      .catch(err => setApiError(clusterApi));
   }, [clusterApi, params.namespace, params.buildName]);
 
   const getGameServerBuild = useCallback(() => {
-    fetch(clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName)
+    fetchWithTimeout(clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName, { timeout: 5000 })
       .then(response => {
         if (response.status === 200) {
           setGsbFound(true);
@@ -45,14 +46,14 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
         }
       })
       .then(response => setGsb(response))
-      .catch(err => setApiError(err));
+      .catch(err => setApiError(clusterApi));
   }, [clusterApi, params.namespace, params.buildName]);
 
   const getGameServerDetails = useCallback(() => {
-    fetch(clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName + "/gameserverdetails")
+    fetchWithTimeout(clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName + "/gameserverdetails", { timeout: 5000 })
       .then(response => response.json())
       .then(response => setGsdList(response.items))
-      .catch(err => setApiError(err));
+      .catch(err => setApiError(clusterApi));
   }, [clusterApi, params.namespace, params.buildName]);
 
   const groupDataByNode = (gsList: Array<GameServer>) => {
@@ -94,6 +95,11 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
       clearInterval(intervalGsb);
       clearInterval(intervalGs);
       clearInterval(intervalGsd);
+      setGsb(undefined);
+      setGsList([]);
+      setGsdList([]);
+      setApiError(undefined);
+      setGsbFound(undefined);
     };
   }, [getGameServerBuild, getGameServers, getGameServerDetails]);
 
@@ -101,20 +107,18 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
   const gsdByName = groupDetailsByName(gsdList);
   return (
     <React.Fragment>
-      {(apiError) &&
+      {(apiError && apiError === clusterApi) &&
         <Box display="flex" justifyContent="center">
-          <Stack direction="column">
-            <Chip color="error" sx={{ marginBottom: "5px" }} variant="outlined"
-              label={"Couldn't reach cluster '" + clusterName + "' at: " + clusters[clusterName].api} />
-          </Stack>
+          <Alert severity="error" onClose={() => { setApiError(undefined) }}>
+            {"Couldn't reach cluster '" + clusterName + "' at: " + clusters[clusterName].api}
+          </Alert>
         </Box>
       }
       {(!gsbFound && gsbFound !== undefined) &&
         <Box display="flex" justifyContent="center">
-          <Stack direction="column">
-            <Chip color="error" sx={{ marginBottom: "5px" }} variant="outlined"
-              label={"Couldn't find Build with name '" + params.buildName + "' in namespace '" + params.namespace + "'"} />
-          </Stack>
+          <Alert severity="error" onClose={() => { setGsbFound(undefined) }}>
+            {"Couldn't find Build with name '" + params.buildName + "' in namespace '" + params.namespace + "'"}
+          </Alert>
         </Box>
       }
       {(gsb) &&
@@ -123,26 +127,38 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
             {clusterName + ": " + gsb.metadata.namespace + "/" + gsb.metadata.name}
           </Typography>
           <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
+            Status
+          </Typography>
+          <Box sx={{ marginBottom: "40px" }}>
+            <GameServerBuildStatus gsb={gsb} />
+          </Box>
+          <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
             Specs
           </Typography>
-          <Box sx={{ marginBottom: "40px" }}><GameServerBuildSpec gsb={gsb} /></Box>
+          <Box sx={{ marginBottom: "40px" }}>
+            <GameServerBuildSpec gsb={gsb} />
+          </Box>
           <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
             Patch Specs
           </Typography>
-          <Box sx={{ marginBottom: "40px" }}><SpecForm clusterApi={clusterApi} gsb={gsb} /></Box>
-          <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
-            Status
-          </Typography>
-          <Box sx={{ marginBottom: "40px" }}><GameServerBuildStatus gsb={gsb} /></Box>
+          <Box sx={{ marginBottom: "40px" }}>
+            <SpecForm clusterApi={clusterApi} gsb={gsb} />
+          </Box>
           <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
             Nodes
           </Typography>
-          <Box sx={{ marginBottom: "40px" }}><NodeTable nodeData={nodeData} /></Box>
+          <Box sx={{ marginBottom: "40px" }}>
+            <NodeTable nodeData={nodeData} />
+          </Box>
           <Typography variant="h6" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
             Game Servers
           </Typography>
-          <Box><AllocateForm allocateApi={allocateApi} buildID={gsb.spec ? gsb.spec.buildID : ""} /></Box>
-          <Box><GameServerTable gsList={gsList} gsdByName={gsdByName} /></Box>
+          <Box>
+            <AllocateForm allocateApi={allocateApi} buildID={gsb.spec ? gsb.spec.buildID : ""} />
+          </Box>
+          <Box>
+            <GameServerTable gsList={gsList} gsdByName={gsdByName} />
+          </Box>
         </React.Fragment>
       }
     </React.Fragment>

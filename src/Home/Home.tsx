@@ -1,6 +1,6 @@
 import React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { Box, Chip, Stack, Typography } from "@mui/material";
+import { Alert, Box, Typography } from "@mui/material";
 import ClustersSummary from "./ClustersSummary";
 import { GameServerBuild } from "../types";
 import GameServerBuildsSummary from "./GameServerBuildsSummary";
@@ -61,6 +61,11 @@ function Home({ clusters }: HomeProps) {
     });
   }, [clusters]);
 
+  const handleCloseAlert = (clusterName: string) => {
+    unreachedClusters.delete(clusterName);
+    setUnreachedClusters(prev => new Set(prev));
+  };
+
   useEffect(() => {
     getAllBuilds();
     const interval = setInterval(getAllBuilds, 5000);
@@ -70,17 +75,18 @@ function Home({ clusters }: HomeProps) {
   const [total, perCluster, perBuild] = groupValues(gsbMap);
   const unreachedClustersArray = Array.from(unreachedClusters).sort()
   const unreachedClusterMessages = unreachedClustersArray.map((clusterName) =>
-    <Chip key={clusterName} color="error" sx={{ marginBottom: "5px" }} variant="outlined"
-      label={"Couldn't reach cluster '" + clusterName + "' at: " + clusters[clusterName].api} />
+    <Box display="flex" justifyContent="center">
+      <Alert severity="error" onClose={() => handleCloseAlert(clusterName)}>
+        {"Couldn't reach cluster '" + clusterName + "' at: " + clusters[clusterName].api}
+      </Alert>
+    </Box>
   );
   return (
     <React.Fragment>
       {(unreachedClusters) &&
-        <Box display="flex" justifyContent="center">
-          <Stack direction="column">
-            {unreachedClusterMessages}
-          </Stack>
-        </Box>
+        <React.Fragment>
+          {unreachedClusterMessages}
+        </React.Fragment>
       }
       <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
         Summary

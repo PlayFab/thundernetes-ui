@@ -1,7 +1,7 @@
 import React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Chip, Grid, Stack, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import GameServerBuildTable from "./GameServerBuildTable";
 import NodeTable from "../Common/NodeTable";
@@ -26,18 +26,18 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
       .then(response => response.json())
       .then(response => setGsbList(response.items))
       .catch(err => {
-        setApiError(clusterName);
+        setApiError(clusterApi);
       });
-  }, [clusterName, clusterApi]);
+  }, [clusterApi]);
 
   const getGameServers = useCallback(() => {
     fetchWithTimeout(clusterApi + "gameservers", { timeout: 5000 })
       .then(response => response.json())
       .then(response => setGsList(response.items))
       .catch(err => {
-        setApiError(clusterName);
+        setApiError(clusterApi);
       });
-  }, [clusterName, clusterApi]);
+  }, [clusterApi]);
 
   const groupDataByNode = (gsList: Array<GameServer>) => {
     const emptyValues = () => {
@@ -75,12 +75,11 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
 
   return (
     <React.Fragment>
-      {(apiError && apiError === clusterName) &&
+      {(apiError && apiError === clusterApi) &&
         <Box display="flex" justifyContent="center">
-          <Stack direction="column">
-            <Chip color="error" sx={{ marginBottom: "5px" }} variant="outlined"
-              label={"Couldn't reach cluster '" + clusterName + "' at: " + clusters[clusterName].api} />
-          </Stack>
+          <Alert severity="error" onClose={() => {setApiError(undefined)}}>
+            {"Couldn't reach cluster '" + clusterName + "' at: " + clusters[clusterName].api}
+          </Alert>
         </Box>
       }
       <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
