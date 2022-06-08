@@ -48,7 +48,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
         return undefined;
       }
     }).then(response => {
-      if (response) {
+      if (response && response.IPV4Address && response.Ports) {
         setAssignedIP(response.IPV4Address);
         setAssignedPorts(response.Ports);
       }
