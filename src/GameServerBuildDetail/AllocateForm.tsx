@@ -13,6 +13,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
   const [assignedIP, setAssignedIP] = useState("");
   const [assignedPorts, setAssignedPorts] = useState("");
   const [allocateError, setAllocateError] = useState<Error>();
+  const [valueError, setValueError] = useState<Error>();
   const [requestAccepted, setRequestAccepted] = useState<boolean>();
 
   const handleChange = (event: any) => {
@@ -22,6 +23,10 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
   }
 
   const handleSubmit = (event: any) => {
+    if (!sessionID) {
+      setValueError(new Error("Session ID cannot be empty"));
+      return;
+    }
     event.preventDefault();
     const body = {
       sessionID: sessionID,
@@ -126,6 +131,15 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
             </Grid>
             <Grid item xs={7} />
           </React.Fragment>
+        }
+        {(valueError) &&
+          <Grid item xs={12}>
+            <Box display="flex" justifyContent="left">
+              <Alert severity="error" onClose={() => { setValueError(undefined) }}>
+                {valueError.message}
+              </Alert>
+            </Box>
+          </Grid>
         }
         {(allocateError) &&
           <Grid item xs={12}>

@@ -82,7 +82,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
       })
       .then(response => {
         if (response && response.items) {
-          setGsList(response.items);
+          setGsdList(response.items);
         }
       })
       .catch(err => {
@@ -96,7 +96,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
     const emptyValues = () => {
       return { standingBy: 0, active: 0 }
     }
-    const nodeData: Record<string, Record<string, number>> = {}
+    const nodeData: Record<string, Record<string, number>> = {};
     gsList.forEach((gs) => {
       if (!gs.status.nodeName) {
         return;
@@ -114,7 +114,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
   };
 
   const groupDetailsByName = (gsdList: Array<GameServerDetail>) => {
-    const gsdByName: Record<string, Record<string, number>> = {}
+    const gsdByName: Record<string, Record<string, number>> = {};
     gsdList.forEach((gsd) => {
       gsdByName[gsd.metadata.name] = {
         connectedPlayersCount: gsd.spec.connectedPlayersCount
