@@ -15,7 +15,7 @@ interface ClusterDetailProps {
 function ClusterDetail({ clusters }: ClusterDetailProps) {
   const [gsList, setGsList] = useState<Array<GameServer>>([]);
   const [gsbList, setGsbList] = useState<Array<GameServerBuild>>([]);
-  const [apiError, setApiError] = useState<string>();
+  const [errors, setErrors] = useState<Set<string>>(new Set());
 
   const params = useParams();
   const clusterName = params.clusterName ? params.clusterName : "";
@@ -23,21 +23,54 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
 
   const getGameServerBuilds = useCallback(() => {
     fetchWithTimeout(clusterApi + "gameserverbuilds", { timeout: 5000 })
-      .then(response => response.json())
-      .then(response => setGsbList(response.items))
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        }
+        setErrors(prev => new Set(
+          prev.add("Couldn't reach cluster '" + clusterName + "' at: " + clusterApi + "gameserverbuilds")
+        ));
+        return undefined;
+      })
+      .then(response => {
+        if (response && response.items) {
+          setGsbList(response.items);
+        }
+      })
       .catch(err => {
-        setApiError(clusterApi);
+        setErrors(prev => new Set(
+          prev.add("Couldn't reach cluster '" + clusterName + "' at: " + clusterApi + "gameserverbuilds")
+        ));
       });
-  }, [clusterApi]);
+  }, [clusterName, clusterApi]);
 
   const getGameServers = useCallback(() => {
     fetchWithTimeout(clusterApi + "gameservers", { timeout: 5000 })
-      .then(response => response.json())
-      .then(response => setGsList(response.items))
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        }
+        setErrors(prev => new Set(
+          prev.add("Couldn't reach cluster '" + clusterName + "' at: " + clusterApi + "gameservers")
+        ));
+        return undefined;
+      })
+      .then(response => {
+        if (response && response.items) {
+          setGsList(response.items);
+        }
+      })
       .catch(err => {
-        setApiError(clusterApi);
+        setErrors(prev => new Set(
+          prev.add("Couldn't reach cluster '" + clusterName + "' at: " + clusterApi + "gameservers")
+        ));
       });
-  }, [clusterApi]);
+  }, [clusterName, clusterApi]);
+
+  const handleCloseAlert = (error: string) => {
+    errors.delete(error);
+    setErrors(prev => new Set(prev));
+  };
 
   const groupDataByNode = (gsList: Array<GameServer>) => {
     const emptyValues = () => {
@@ -70,20 +103,26 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
       clearInterval(gsbInterval);
       setGsList([]);
       setGsbList([]);
-      setApiError(undefined);
+      setErrors(new Set());
     };
   }, [getGameServers, getGameServerBuilds]);
 
   const nodeData = groupDataByNode(gsList);
+  const errorsArray = Array.from(errors).sort();
+  const errorMessages = errorsArray.map((error, index) =>
+    <Box key={index} display="flex" justifyContent="center">
+      <Alert severity="error" onClose={() => { handleCloseAlert(error) }}>
+        {error}
+      </Alert>
+    </Box>
+  );
 
   return (
     <React.Fragment>
-      {(apiError && apiError === clusterApi) &&
-        <Box display="flex" justifyContent="center">
-          <Alert severity="error" onClose={() => {setApiError(undefined)}}>
-            {"Couldn't reach cluster '" + clusterName + "' at: " + clusters[clusterName].api}
-          </Alert>
-        </Box>
+      {(errors) &&
+        <React.Fragment>
+          {errorMessages}
+        </React.Fragment>
       }
       <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "20px" }}>
         {clusterName}

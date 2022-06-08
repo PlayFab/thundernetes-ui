@@ -19,8 +19,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
   const [gsb, setGsb] = useState<GameServerBuild>();
   const [gsList, setGsList] = useState<Array<GameServer>>([]);
   const [gsdList, setGsdList] = useState<Array<GameServerDetail>>([]);
-  const [apiError, setApiError] = useState<string>();
-  const [gsbFound, setGsbFound] = useState<boolean>();
+  const [errors, setErrors] = useState<Set<string>>(new Set());
 
   const params = useParams();
   const clusterName = params.clusterName ? params.clusterName : "";
@@ -29,32 +28,69 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
 
   const getGameServers = useCallback(() => {
     fetchWithTimeout(clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName + "/gameservers", { timeout: 5000 })
-      .then(response => response.json())
-      .then(response => setGsList(response.items))
-      .catch(err => setApiError(clusterApi));
-  }, [clusterApi, params.namespace, params.buildName]);
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        }
+        setErrors(prev => new Set(
+          prev.add("Couldn't reach cluster '" + clusterName + "' at: " + clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName + "/gameservers")
+        ));
+        return undefined;
+      })
+      .then(response => {
+        if (response && response.items) {
+          setGsList(response.items);
+        }
+      })
+      .catch(err => {
+        setErrors(prev => new Set(
+          prev.add("Couldn't reach cluster '" + clusterName + "' at: " + clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName + "/gameservers")
+        ));
+      });
+  }, [clusterName, clusterApi, params.namespace, params.buildName]);
 
   const getGameServerBuild = useCallback(() => {
     fetchWithTimeout(clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName, { timeout: 5000 })
       .then(response => {
         if (response.status === 200) {
-          setGsbFound(true);
           return response.json();
         } else if (response.status === 404) {
-          setGsbFound(false);
+          setErrors(prev => new Set(
+            prev.add("Couldn't find a Build named '" + params.buildName + "' at: " + clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName)
+          ));
           return undefined;
         }
       })
       .then(response => setGsb(response))
-      .catch(err => setApiError(clusterApi));
-  }, [clusterApi, params.namespace, params.buildName]);
+      .catch(err => {
+        setErrors(prev => new Set(
+          prev.add("Couldn't reach cluster '" + clusterName + "' at: " + clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName)
+        ));
+      });
+  }, [clusterName, clusterApi, params.namespace, params.buildName]);
 
   const getGameServerDetails = useCallback(() => {
     fetchWithTimeout(clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName + "/gameserverdetails", { timeout: 5000 })
-      .then(response => response.json())
-      .then(response => setGsdList(response.items))
-      .catch(err => setApiError(clusterApi));
-  }, [clusterApi, params.namespace, params.buildName]);
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        }
+        setErrors(prev => new Set(
+          prev.add("Couldn't reach cluster '" + clusterName + "' at: " + clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName + "/gameserverdetails")
+        ));
+        return undefined;
+      })
+      .then(response => {
+        if (response && response.items) {
+          setGsList(response.items);
+        }
+      })
+      .catch(err => {
+        setErrors(prev => new Set(
+          prev.add("Couldn't reach cluster '" + clusterName + "' at: " + clusterApi + "gameserverbuilds/" + params.namespace + "/" + params.buildName + "/gameserverdetails")
+        ));
+      });
+  }, [clusterName, clusterApi, params.namespace, params.buildName]);
 
   const groupDataByNode = (gsList: Array<GameServer>) => {
     const emptyValues = () => {
@@ -87,6 +123,11 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
     return gsdByName;
   };
 
+  const handleCloseAlert = (error: string) => {
+    errors.delete(error);
+    setErrors(prev => new Set(prev));
+  };
+
   useEffect(() => {
     getGameServerBuild();
     getGameServers();
@@ -101,28 +142,27 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
       setGsb(undefined);
       setGsList([]);
       setGsdList([]);
-      setApiError(undefined);
-      setGsbFound(undefined);
+      setErrors(new Set());
     };
   }, [getGameServerBuild, getGameServers, getGameServerDetails]);
 
   const nodeData = groupDataByNode(gsList);
   const gsdByName = groupDetailsByName(gsdList);
+  const errorsArray = Array.from(errors).sort();
+  const errorMessages = errorsArray.map((error, index) =>
+    <Box key={index} display="flex" justifyContent="center">
+      <Alert severity="error" onClose={() => { handleCloseAlert(error) }}>
+        {error}
+      </Alert>
+    </Box>
+  );
+
   return (
     <React.Fragment>
-      {(apiError && apiError === clusterApi) &&
-        <Box display="flex" justifyContent="center">
-          <Alert severity="error" onClose={() => { setApiError(undefined) }}>
-            {"Couldn't reach cluster '" + clusterName + "' at: " + clusters[clusterName].api}
-          </Alert>
-        </Box>
-      }
-      {(!gsbFound && gsbFound !== undefined) &&
-        <Box display="flex" justifyContent="center">
-          <Alert severity="error" onClose={() => { setGsbFound(undefined) }}>
-            {"Couldn't find Build with name '" + params.buildName + "' in namespace '" + params.namespace + "'"}
-          </Alert>
-        </Box>
+      {(errors) &&
+        <React.Fragment>
+          {errorMessages}
+        </React.Fragment>
       }
       {(gsb) &&
         <React.Fragment>

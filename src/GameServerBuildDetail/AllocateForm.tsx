@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Alert, Box, Button, Grid, IconButton, InputAdornment, TextField, Tooltip } from "@mui/material";
 import { ContentCopy, Done } from "@mui/icons-material";
+import { fetchWithTimeout } from "../utils";
 
 interface AllocateFormProps {
   allocateApi: string,
@@ -26,7 +27,8 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
       sessionID: sessionID,
       buildID: buildID
     }
-    fetch(allocateApi, {
+    fetchWithTimeout(allocateApi, {
+      timeout: 5000,
       method: "POST",
       headers: {
         "Content-Type": "application/json"
