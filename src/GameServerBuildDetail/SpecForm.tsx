@@ -12,9 +12,8 @@ interface SpecFormProps {
 function SpecForm({ clusterApi, gsb }: SpecFormProps) {
   const [max, setMax] = useState<number>();
   const [standingBy, setStandingBy] = useState<number>();
-  const [allocateError, setAllocateError] = useState<string>();
+  const [error, setError] = useState<string>();
   const [requestAccepted, setRequestAccepted] = useState<boolean>();
-  const [valueError, setValueError] = useState<Error>();
 
   const handleChange = (event: any) => {
     const isInt = /^\d+$/;
@@ -27,7 +26,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
       } else {
         setMax(Number(event.target.value));
       }
-    } 
+    }
     if (event.target.name === "standingBy") {
       if (event.target.value === "") {
         setStandingBy(undefined);
@@ -39,15 +38,14 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    setAllocateError(undefined);
+    setError(undefined);
     setRequestAccepted(undefined);
-    setValueError(undefined);
     if (standingBy === undefined || max === undefined) {
-      setValueError(new Error("standingBy and max values cannot be empty"));
+      setError("standingBy and max values cannot be empty");
       return;
     }
     if (standingBy > max) {
-      setValueError(new Error("standingBy cannot be more than max"));
+      setError("standingBy cannot be more than max");
       return;
     }
     const patch = {
@@ -65,10 +63,10 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
       if (response.status === 200) {
         setRequestAccepted(true);
       } else {
-        setRequestAccepted(false);
+        setError("API denied the request: " + response.text());
       }
     }).catch(err => {
-      setAllocateError(clusterApi);
+      setError("Couldn't reach API at: " + clusterApi);
     });
   }
 
@@ -76,44 +74,26 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
     <form onSubmit={handleSubmit}>
       <Grid container justifyContent="left" spacing={2} sx={{ flexGrow: 1, marginBottom: "40px" }}>
         <Grid item xs={2}>
-          <TextField name="standingBy" id="standingBy" size="small" label="StandingBy" value={standingBy===undefined?"":standingBy} onChange={handleChange} />
+          <TextField name="standingBy" id="standingBy" size="small" label="StandingBy" value={standingBy === undefined ? "" : standingBy} onChange={handleChange} />
         </Grid>
         <Grid item xs={2}>
-          <TextField name="max" id="max" size="small" label="Max" value={max===undefined?"":max} onChange={handleChange} />
+          <TextField name="max" id="max" size="small" label="Max" value={max === undefined ? "" : max} onChange={handleChange} />
         </Grid>
         <Grid item xs={1}>
           <Button variant="contained" color="primary" type="submit">
             Patch
           </Button>
         </Grid>
-        {(valueError) &&
-          <Grid item xs={12}>
-            <Box display="flex" justifyContent="left">
-              <Alert severity="error" onClose={() => { setValueError(undefined) }}>
-                {valueError.message}
-              </Alert>
-            </Box>
-          </Grid>
-        }
         {(requestAccepted) &&
           <Grid item xs={1}>
             <Done color="success" sx={{ marginTop: "5px" }} />
           </Grid>
         }
-        {(allocateError && allocateError === clusterApi) &&
+        {(error && error === clusterApi) &&
           <Grid item xs={12}>
             <Box display="flex" justifyContent="left">
-              <Alert severity="error" onClose={() => { setAllocateError(undefined) }}>
-                {"Couldn't reach API at: " + clusterApi}
-              </Alert>
-            </Box>
-          </Grid>
-        }
-        {(!requestAccepted && requestAccepted !== undefined) &&
-          <Grid item xs={12}>
-            <Box display="flex" justifyContent="left">
-              <Alert severity="error" onClose={() => { setRequestAccepted(undefined) }}>
-                {"API denied the request at: " + clusterApi}
+              <Alert severity="error" onClose={() => { setError(undefined) }}>
+                {error}
               </Alert>
             </Box>
           </Grid>

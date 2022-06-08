@@ -12,8 +12,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
   const [sessionID, setSessionID] = useState("");
   const [assignedIP, setAssignedIP] = useState("");
   const [assignedPorts, setAssignedPorts] = useState("");
-  const [allocateError, setAllocateError] = useState<Error>();
-  const [valueError, setValueError] = useState<Error>();
+  const [error, setError] = useState<string>();
   const [requestAccepted, setRequestAccepted] = useState<boolean>();
 
   const handleChange = (event: any) => {
@@ -23,11 +22,15 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
   }
 
   const handleSubmit = (event: any) => {
+    event.preventDefault();
+    setError(undefined);
+    setRequestAccepted(undefined);
+    setAssignedIP("");
+    setAssignedPorts("");
     if (!sessionID) {
-      setValueError(new Error("Session ID cannot be empty"));
+      setError("Session ID cannot be empty");
       return;
     }
-    event.preventDefault();
     const body = {
       sessionID: sessionID,
       buildID: buildID
@@ -44,7 +47,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
         setRequestAccepted(true);
         return response.json();
       } else {
-        setRequestAccepted(false);
+        setError("API denied the request: " + response.text());
         return undefined;
       }
     }).then(response => {
@@ -53,7 +56,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
         setAssignedPorts(response.Ports);
       }
     }).catch(err => {
-      setAllocateError(err);
+      setError("Couldn't reach API at: " + allocateApi);
     });
   }
 
@@ -79,7 +82,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
           </Grid>
         }
         <Grid item xs={4} />
-        {(!allocateError && !requestAccepted && assignedIP && assignedPorts) &&
+        {(!error && assignedIP && assignedPorts) &&
           <React.Fragment>
             <Grid item xs={3}>
               <TextField
@@ -132,29 +135,11 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
             <Grid item xs={7} />
           </React.Fragment>
         }
-        {(valueError) &&
+        {(error) &&
           <Grid item xs={12}>
             <Box display="flex" justifyContent="left">
-              <Alert severity="error" onClose={() => { setValueError(undefined) }}>
-                {valueError.message}
-              </Alert>
-            </Box>
-          </Grid>
-        }
-        {(allocateError) &&
-          <Grid item xs={12}>
-            <Box display="flex" justifyContent="left">
-              <Alert severity="error" onClose={() => { setAllocateError(undefined) }}>
-                {"Couldn't reach allocation endpoint at: " + allocateApi}
-              </Alert>
-            </Box>
-          </Grid>
-        }
-        {(!requestAccepted && requestAccepted !== undefined) &&
-          <Grid item xs={12}>
-            <Box display="flex" justifyContent="left">
-              <Alert severity="error" onClose={() => { setRequestAccepted(undefined) }}>
-                {"Allocation endpoint denied the request at: " + allocateApi}
+              <Alert severity="error" onClose={() => { setError(undefined) }}>
+                {error}
               </Alert>
             </Box>
           </Grid>
