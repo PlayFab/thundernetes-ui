@@ -17,10 +17,23 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
   const [valueError, setValueError] = useState<Error>();
 
   const handleChange = (event: any) => {
+    const isInt = /^\d+$/;
+    if (!(isInt.test(event.target.value) || event.target.value === "")) {
+      return;
+    }
     if (event.target.name === "max") {
-      setMax(event.target.value);
-    } else if (event.target.name === "standingBy") {
-      setStandingBy(event.target.value);
+      if (event.target.value === "") {
+        setMax(undefined);
+      } else {
+        setMax(Number(event.target.value));
+      }
+    } 
+    if (event.target.name === "standingBy") {
+      if (event.target.value === "") {
+        setStandingBy(undefined);
+      } else {
+        setStandingBy(Number(event.target.value));
+      }
     }
   }
 
@@ -32,7 +45,8 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
     if (standingBy === undefined || max === undefined) {
       setValueError(new Error("standingBy and max values cannot be empty"));
       return;
-    } else if (standingBy > max) {
+    }
+    if (standingBy > max) {
       setValueError(new Error("standingBy cannot be more than max"));
       return;
     }
@@ -62,10 +76,10 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
     <form onSubmit={handleSubmit}>
       <Grid container justifyContent="left" spacing={2} sx={{ flexGrow: 1, marginBottom: "40px" }}>
         <Grid item xs={2}>
-          <TextField name="standingBy" type="number" id="standingBy" size="small" label="StandingBy" value={standingBy} onChange={handleChange} />
+          <TextField name="standingBy" id="standingBy" size="small" label="StandingBy" value={standingBy===undefined?"":standingBy} onChange={handleChange} />
         </Grid>
         <Grid item xs={2}>
-          <TextField name="max" type="number" id="max" size="small" label="Max" value={max} onChange={handleChange} />
+          <TextField name="max" id="max" size="small" label="Max" value={max===undefined?"":max} onChange={handleChange} />
         </Grid>
         <Grid item xs={1}>
           <Button variant="contained" color="primary" type="submit">
