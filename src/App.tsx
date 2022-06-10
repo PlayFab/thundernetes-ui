@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { Box, Toolbar } from '@mui/material';
 import ClusterDetail from './ClusterDetail/ClusterDetail';
+import GameServerBuildCreate from './GameServerBuildCreate/GameServerBuildCreate';
 import GameServerBuildDetail from './GameServerBuildDetail/GameServerBuildDetail';
 import Home from './Home/Home';
 import SideMenu from './Common/SideMenu';
@@ -17,7 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home clusters={clusters} />} />
           <Route path=":clusterName" element={<ClusterDetail clusters={clusters} />} />
-          <Route path=":clusterName/gsb/create" element={<h2>Create Game Server Build</h2>}/>
+          <Route path=":clusterName/gsb/create" element={<GameServerBuildCreate clusters={clusters}/>}/>
           <Route path=":clusterName/gsb/:namespace/:buildName" element={<GameServerBuildDetail clusters={clusters}/>} />
         </Routes>
       </Box>
