@@ -65,7 +65,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
   return (
     <React.Fragment>
       <Grid container spacing={2}>
-        {(error && error === clusterApi) &&
+        {(error) &&
           <Grid item xs={12}>
             <Box display="flex" justifyContent="center">
               <Alert severity="error" onClose={() => { setError(undefined) }}>
