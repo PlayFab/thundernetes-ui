@@ -89,7 +89,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
             <Done color="success" sx={{ marginTop: "5px" }} />
           </Grid>
         }
-        {(error && error === clusterApi) &&
+        {(error) &&
           <Grid item xs={12}>
             <Box display="flex" justifyContent="left">
               <Alert severity="error" onClose={() => { setError(undefined) }}>
