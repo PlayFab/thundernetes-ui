@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Alert, Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import Editor from "@monaco-editor/react";
-import { parse, stringify } from 'yaml';
+import { parse } from 'yaml';
 import { fetchWithTimeout } from "../utils";
 
 interface GameServerBuildCreateProps {
@@ -46,7 +46,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
 
     fetchWithTimeout(clusterApi + "gameserverbuilds", {
       timeout: 5000,
-      method: "PATCH",
+      method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
@@ -55,7 +55,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
       if (response.status === 200) {
         setRequestAccepted(true);
       } else {
-        setError("API denied the request: " + response.text());
+        setError("API denied the request: " + response.statusText);
       }
     }).catch(err => {
       setError("Couldn't reach API at: " + clusterApi);
@@ -70,6 +70,15 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
             <Box display="flex" justifyContent="center">
               <Alert severity="error" onClose={() => { setError(undefined) }}>
                 {error}
+              </Alert>
+            </Box>
+          </Grid>
+        }
+        {(requestAccepted) &&
+          <Grid item xs={12}>
+            <Box display="flex" justifyContent="center">
+              <Alert severity="success" onClose={() => { setRequestAccepted(undefined) }}>
+                {"Request accepted"}
               </Alert>
             </Box>
           </Grid>
