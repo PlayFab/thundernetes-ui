@@ -52,7 +52,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
       },
       body: JSON.stringify(build)
     }).then(response => {
-      if (response.status === 200) {
+      if (response.status === 201) {
         setRequestAccepted(true);
       } else {
         setError("API denied the request: " + response.statusText);
@@ -78,7 +78,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
           <Grid item xs={12}>
             <Box display="flex" justifyContent="center">
               <Alert severity="success" onClose={() => { setRequestAccepted(undefined) }}>
-                {"Request accepted"}
+                {"Successfully created build"}
               </Alert>
             </Box>
           </Grid>
