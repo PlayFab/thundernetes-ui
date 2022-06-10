@@ -47,7 +47,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
         setRequestAccepted(true);
         return response.json();
       } else {
-        setError("API denied the request: " + response.text());
+        setError("API denied the request: " + response.statusText);
         return undefined;
       }
     }).then(response => {

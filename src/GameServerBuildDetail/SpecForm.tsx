@@ -63,7 +63,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
       if (response.status === 200) {
         setRequestAccepted(true);
       } else {
-        setError("API denied the request: " + response.text());
+        setError("API denied the request: " + response.statusText);
       }
     }).catch(err => {
       setError("Couldn't reach API at: " + clusterApi);
