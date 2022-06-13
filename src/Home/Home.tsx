@@ -25,7 +25,7 @@ function Home({ clusters }: HomeProps) {
     let total: Record<string, number> = emptyValues();
     let perCluster: Record<string, Record<string, number>> = {};
     let perBuild: Record<string, Record<string, number>> = {};
-    let keys = Array.from(data.keys());
+    const keys = Array.from(data.keys());
     keys.forEach((clusterName) => {
       if (!perCluster[clusterName]) {
         perCluster[clusterName] = emptyValues();
