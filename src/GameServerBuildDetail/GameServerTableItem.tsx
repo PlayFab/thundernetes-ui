@@ -1,5 +1,5 @@
 import { TableCell, TableRow } from "@mui/material";
-import { GameServer } from "./types";
+import { GameServer } from "../types";
 
 interface GameServerTableItemProps {
   gs: GameServer,

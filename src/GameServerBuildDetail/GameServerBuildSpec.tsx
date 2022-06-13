@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableContainer, TableRow, Typography, Paper } from "@mui/material";
-import { GameServerBuild } from "./types";
+import { GameServerBuild } from "../types";
 
 interface GameServerBuildSpecProps {
   gsb: GameServerBuild

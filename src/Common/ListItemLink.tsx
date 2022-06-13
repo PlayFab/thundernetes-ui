@@ -1,6 +1,6 @@
 import React from "react";
 import { Link as RouterLink, LinkProps } from "react-router-dom";
-import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { ListItem, ListItemIcon, ListItemText, Tooltip, Typography } from '@mui/material';
 
 interface ListItemLinkProps {
   icon?: React.ReactElement;
@@ -24,10 +24,12 @@ function ListItemLink(props: ListItemLinkProps) {
 
   return (
     <li>
-      <ListItem button component={renderLink}>
-        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
-        <ListItemText primary={primary} />
-      </ListItem>
+      <Tooltip title={primary} placement="right">
+        <ListItem button component={renderLink}>
+          {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+          <ListItemText primary={<Typography noWrap>{primary}</Typography>} />
+        </ListItem>
+      </Tooltip>
     </li>
   );
 }

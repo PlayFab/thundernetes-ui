@@ -1,13 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
 import { Box, Toolbar } from '@mui/material';
-import ClusterDetail from './ClusterDetail';
-import GameServerBuildDetail from './GameServerBuildDetail';
-import Home from './Home';
-import SideMenu from './SideMenu';
-import TopAppBar from './TopAppBar';
+import ClusterDetail from './ClusterDetail/ClusterDetail';
+import GameServerBuildDetail from './GameServerBuildDetail/GameServerBuildDetail';
+import Home from './Home/Home';
+import SideMenu from './Common/SideMenu';
+import TopAppBar from './Common/TopAppBar';
+import clusters from './clusters.json';
 
 function App() {
-  let clusters = JSON.parse(process.env.REACT_APP_GAMESERVERAPI_URL ? process.env.REACT_APP_GAMESERVERAPI_URL : "{}");
   return (
     <Box sx={{ display: 'flex' }}>
       <TopAppBar />
