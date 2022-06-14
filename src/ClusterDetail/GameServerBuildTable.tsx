@@ -3,12 +3,13 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { GameServerBuild } from "../types";
 
 interface GameServerBuildTableProps {
+  clusterApi: string,
   gsbList: Array<GameServerBuild>
 }
 
-function GameServerBuildTable({ gsbList }: GameServerBuildTableProps) {
+function GameServerBuildTable({ clusterApi, gsbList }: GameServerBuildTableProps) {
   gsbList = gsbList.sort((a: GameServerBuild, b: GameServerBuild) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
-  let items = gsbList.map((gsb, index) => <GameServerBuildTableItem key={index} gsb={gsb} />);
+  let items = gsbList.map((gsb, index) => <GameServerBuildTableItem key={index} clusterApi={clusterApi} gsb={gsb} />);
   return (
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
@@ -20,6 +21,7 @@ function GameServerBuildTable({ gsbList }: GameServerBuildTableProps) {
             <TableCell>StandingBy</TableCell>
             <TableCell>Crashes</TableCell>
             <TableCell>Health</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

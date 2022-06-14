@@ -142,7 +142,7 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
         </Grid>
       </Grid>
       <Box sx={{ marginBottom: "30px" }}>
-        <GameServerBuildTable gsbList={gsbList} />
+        <GameServerBuildTable clusterApi={clusterApi} gsbList={gsbList} />
       </Box>
       <Typography variant="h5" gutterBottom component="div">
         Nodes
