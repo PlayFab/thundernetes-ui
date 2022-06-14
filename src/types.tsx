@@ -10,7 +10,10 @@ interface GameServerBuild {
     standingBy: number,
     max: number,
     portsToExpose: Array<number>,
-    crashesToMarkUnhealthy: number
+    crashesToMarkUnhealthy: number,
+    template: {
+      metadata: any
+    }
   },
   status: {
     currentActive: number,
@@ -60,7 +63,10 @@ const emptyGameServerBuild: GameServerBuild = {
     standingBy: 0,
     max: 0,
     portsToExpose: [],
-    crashesToMarkUnhealthy: 0
+    crashesToMarkUnhealthy: 0,
+    template: {
+      metadata: {}
+    }
   },
   status: {
     currentActive: 0,

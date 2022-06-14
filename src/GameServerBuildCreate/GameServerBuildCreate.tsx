@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Alert, Box, Button, FormControl, Grid, InputLabel, ListSubheader, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import Editor from "@monaco-editor/react";
@@ -83,18 +83,30 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
     const clusterNames = Array.from(data.keys()).sort();
     clusterNames.forEach((clusterName) => {
       selectItems = selectItems.concat([<ListSubheader key={clusterName}>{clusterName}</ListSubheader>]);
-      const clusterSelectItems = data.get(clusterName)!.map((gsb) =>
-        <MenuItem key={clusterName + gsb.metadata.name} value={stringify(gsb)}>{gsb.metadata.name}</MenuItem>
+      const clusterGsb =  data.get(clusterName)!.sort((a: GameServerBuild, b: GameServerBuild) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
+      const clusterSelectItems = clusterGsb.map((gsb) =>
+        <MenuItem key={clusterName + gsb.metadata.name} value={stringify(adaptGsb(gsb))}>{gsb.metadata.name}</MenuItem>
       );
       selectItems = selectItems.concat(clusterSelectItems);
     });
     return selectItems;
   };
 
-  useEffect(() => {
-    getDefaultTemplate();
-    getAllBuilds();
-  }, [getAllBuilds, getDefaultTemplate]);
+  const adaptGsb = (gsb: GameServerBuild) => {
+    const newGsb = {
+      apiVersion: gsb.apiVersion,
+      kind: gsb.kind,
+      metadata: {
+        name: gsb.metadata.name,
+        namespace: gsb.metadata.namespace
+      },
+      spec: gsb.spec
+    };
+    if (newGsb.spec.template && newGsb.spec.template.metadata) {
+      delete newGsb.spec.template.metadata;
+    }
+    return newGsb;
+  };
 
   const handleCloseAlert = (error: string) => {
     templatesErrors.delete(error);
@@ -102,24 +114,19 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
   };
 
   const handleTemplateChange = (event: SelectChangeEvent) => {
-    if (event && event.target && event.target.value) {
+    if (event && event.target) {
       setCurrentTemplate(event.target.value as string);
       setBuildYaml(event.target.value as string);
     }
   };
 
   const handleYamlChange = (value: string | undefined) => {
-    if (currentTemplate !== "") {
-      setCurrentTemplate("");
-    }
     if (value) {
       setBuildYaml(value);
-    } else {
-      setBuildYaml("");
     }
-  }
+  };
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
     setRequestAccepted(undefined);
@@ -131,6 +138,10 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
       console.log("Not a valid yaml file");
       setError("Not a valid yaml file");
       return;
+    }
+
+    if (build.metadata && !build.metadata.namespace) {
+      build.metadata.namespace = "default";
     }
 
     fetchWithTimeout(clusterApi + "gameserverbuilds", {
@@ -149,7 +160,12 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
     }).catch(err => {
       setError("Couldn't reach API at: " + clusterApi);
     });
-  }
+  };
+
+  useEffect(() => {
+    getDefaultTemplate();
+    getAllBuilds();
+  }, [getAllBuilds, getDefaultTemplate]);
 
   const selectItems = makeSelectItems(gsbTemplates);
   const templateErrorsArray = Array.from(templatesErrors).sort();
@@ -164,7 +180,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
   );
 
   return (
-    <React.Fragment>
+    <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
         {(error) &&
           <Grid item xs={12}>
@@ -209,7 +225,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
           </FormControl>
         </Grid>
         <Grid container item xs={1} justifyContent="flex-end">
-          <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ height: "40px", marginTop: "8px" }}>
+          <Button variant="contained" color="primary" type="submit" sx={{ height: "40px", marginTop: "8px" }}>
             Create
           </Button>
         </Grid>
@@ -224,7 +240,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
           />
         </Grid>
       </Grid>
-    </React.Fragment>
+    </form>
   );
 }
 

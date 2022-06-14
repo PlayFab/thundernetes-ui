@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { Alert, Box, Button, Grid, TextField } from "@mui/material";
 import { Done } from "@mui/icons-material";
 import { GameServerBuild } from "../types";
@@ -15,7 +15,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
   const [error, setError] = useState<string>();
   const [requestAccepted, setRequestAccepted] = useState<boolean>();
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const isInt = /^\d+$/;
     if (!(isInt.test(event.target.value) || event.target.value === "")) {
       return;
@@ -36,7 +36,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
     }
   }
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
     setRequestAccepted(undefined);

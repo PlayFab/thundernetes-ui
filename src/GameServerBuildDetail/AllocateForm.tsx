@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import { Alert, Box, Button, Grid, IconButton, InputAdornment, TextField, Tooltip } from "@mui/material";
 import { ContentCopy, Done } from "@mui/icons-material";
 import { fetchWithTimeout } from "../utils";
@@ -15,13 +15,13 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
   const [error, setError] = useState<string>();
   const [requestAccepted, setRequestAccepted] = useState<boolean>();
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === "sessionID") {
       setSessionID(event.target.value);
     }
-  }
+  };
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
     setRequestAccepted(undefined);
@@ -58,7 +58,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
     }).catch(err => {
       setError("Couldn't reach API at: " + allocateApi);
     });
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
