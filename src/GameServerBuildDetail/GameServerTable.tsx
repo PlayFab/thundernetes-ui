@@ -5,11 +5,12 @@ import { GameServer } from "../types";
 import TablePaginationActions from "../Common/TablePaginationActions";
 
 interface GameServerTableProps {
+  clusterApi: string,
   gsList: Array<GameServer>,
   gsdByName: Record<string, Record<string, number>>
 }
 
-function GameServerTable({ gsList, gsdByName }: GameServerTableProps) {
+function GameServerTable({ clusterApi, gsList, gsdByName }: GameServerTableProps) {
   const [page, setPage] = useState(0);
   const rowsPerPage = 10;
 
@@ -24,7 +25,7 @@ function GameServerTable({ gsList, gsdByName }: GameServerTableProps) {
   };
 
   gsList = gsList.sort((a: GameServer, b: GameServer) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
-  let items = gsList.map((gs, index) => <GameServerTableItem key={index} gs={gs} gsd={gsdByName[gs.metadata.name]} />);
+  let items = gsList.map((gs, index) => <GameServerTableItem key={index} clusterApi={clusterApi} gs={gs} gsd={gsdByName[gs.metadata.name]} />);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="simple table">
@@ -37,6 +38,7 @@ function GameServerTable({ gsList, gsdByName }: GameServerTableProps) {
             <TableCell>Public IP</TableCell>
             <TableCell>Ports</TableCell>
             <TableCell>Player Count</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

@@ -200,7 +200,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
             <AllocateForm allocateApi={allocateApi} buildID={gsb.spec ? gsb.spec.buildID : ""} />
           </Box>
           <Box>
-            <GameServerTable gsList={gsList} gsdByName={gsdByName} />
+            <GameServerTable clusterApi={clusterApi} gsList={gsList} gsdByName={gsdByName} />
           </Box>
         </React.Fragment>
       }
