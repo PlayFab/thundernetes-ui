@@ -15,7 +15,7 @@ function GameServerBuildTableItem({ clusterApi, gsb }: GameServerBuildTableItemP
   const [error, setError] = useState<string>();
 
   const deleteGameServerBuild = () => {
-    fetchWithTimeout(clusterApi + "gameserverbuild/" + gsb.metadata.namespace + "/" + gsb.metadata.name, {
+    fetchWithTimeout(clusterApi + "gameserverbuilds/" + gsb.metadata.namespace + "/" + gsb.metadata.name, {
       timeout: 5000,
       method: "DELETE"
     }).then(response => {
