@@ -27,7 +27,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
     fetchWithTimeout("https://raw.githubusercontent.com/PlayFab/thundernetes/main/samples/netcore/sample.yaml", { timeout: 5000 })
       .then(response => {
         if (response.status === 200) {
-          return response.statusText;
+          return response.text();
         }
         setTemplatesErrors(prev => new Set(
           prev.add("Couldn't load default template")
@@ -83,7 +83,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
     const clusterNames = Array.from(data.keys()).sort();
     clusterNames.forEach((clusterName) => {
       selectItems = selectItems.concat([<ListSubheader key={clusterName}>{clusterName}</ListSubheader>]);
-      const clusterGsb =  data.get(clusterName)!.sort((a: GameServerBuild, b: GameServerBuild) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
+      const clusterGsb = data.get(clusterName)!.sort((a: GameServerBuild, b: GameServerBuild) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
       const clusterSelectItems = clusterGsb.map((gsb) =>
         <MenuItem key={clusterName + gsb.metadata.name} value={stringify(adaptGsb(gsb))}>{gsb.metadata.name}</MenuItem>
       );
@@ -169,77 +169,73 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
   const selectItems = makeSelectItems(gsbTemplates);
   const templateErrorsArray = Array.from(templatesErrors).sort();
   const templateErrorMessages = templateErrorsArray.map((error, index) =>
-    <Grid key={index} item xs={12}>
-      <Box display="flex" justifyContent="center">
-        <Alert severity="error" onClose={() => handleCloseAlert(error)}>
-          {error}
-        </Alert>
-      </Box>
-    </Grid>
+    <Box display="flex" justifyContent="center">
+      <Alert severity="error" onClose={() => handleCloseAlert(error)}>
+        {error}
+      </Alert>
+    </Box>
   );
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Grid container spacing={2}>
-        {(error) &&
-          <Grid item xs={12}>
-            <Box display="flex" justifyContent="center">
-              <Alert severity="error" onClose={() => { setError(undefined) }}>
-                {error}
-              </Alert>
-            </Box>
+    <React.Fragment>
+      {(error) &&
+        <Box display="flex" justifyContent="center">
+          <Alert severity="error" onClose={() => { setError(undefined) }}>
+            {error}
+          </Alert>
+        </Box>
+      }
+      {(requestAccepted) &&
+        <Box display="flex" justifyContent="center">
+          <Alert severity="success" onClose={() => { setRequestAccepted(undefined) }}>
+            Successfully created build
+          </Alert>
+        </Box>
+      }
+      {(templatesErrors) &&
+        <React.Fragment>
+          {templateErrorMessages}
+        </React.Fragment>
+      }
+      <form onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid container item xs={7}>
+            <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
+              {clusterName}: Create a Build
+            </Typography>
           </Grid>
-        }
-        {(requestAccepted) &&
-          <Grid item xs={12}>
-            <Box display="flex" justifyContent="center">
-              <Alert severity="success" onClose={() => { setRequestAccepted(undefined) }}>
-                Successfully created build
-              </Alert>
-            </Box>
+          <Grid container item xs={3} justifyContent="flex-end">
+            <FormControl sx={{ m: 1 }} fullWidth size="small">
+              <InputLabel id="template-select">Template</InputLabel>
+              <Select
+                labelId="template-select"
+                id="template-select"
+                label="Template"
+                value={currentTemplate}
+                onChange={handleTemplateChange}
+              >
+                {selectItems}
+              </Select>
+            </FormControl>
           </Grid>
-        }
-        {(templatesErrors) &&
-          <React.Fragment>
-            {templateErrorMessages}
-          </React.Fragment>
-        }
-        <Grid container item xs={7}>
-          <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
-            {clusterName}: Create a Build
-          </Typography>
+          <Grid container item xs={1} justifyContent="flex-end">
+            <Button variant="contained" color="primary" type="submit" sx={{ height: "40px", marginTop: "8px" }}>
+              Create
+            </Button>
+          </Grid>
+          <Grid container item xs={12} justifyContent="center">
+            <Editor
+              height="60vh"
+              width="70vw"
+              defaultLanguage="yaml"
+              onChange={handleYamlChange}
+              options={{ tabSize: 2 }}
+              value={buildYaml}
+            />
+          </Grid>
         </Grid>
-        <Grid container item xs={3} justifyContent="flex-end">
-          <FormControl sx={{ m: 1 }} fullWidth size="small">
-            <InputLabel id="template-select">Template</InputLabel>
-            <Select
-              labelId="template-select"
-              id="template-select"
-              label="Template"
-              value={currentTemplate}
-              onChange={handleTemplateChange}
-            >
-              {selectItems}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid container item xs={1} justifyContent="flex-end">
-          <Button variant="contained" color="primary" type="submit" sx={{ height: "40px", marginTop: "8px" }}>
-            Create
-          </Button>
-        </Grid>
-        <Grid container item xs={12} justifyContent="center">
-          <Editor
-            height="60vh"
-            width="70vw"
-            defaultLanguage="yaml"
-            onChange={handleYamlChange}
-            options={{ tabSize: 2 }}
-            value={buildYaml}
-          />
-        </Grid>
-      </Grid>
-    </form>
+      </form>
+    </React.Fragment>
   );
 }
 
