@@ -39,7 +39,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
-    setRequestAccepted(undefined);
+    setRequestAccepted(false);
     if (standingBy === undefined || max === undefined) {
       setError("standingBy and max values cannot be empty");
       return;

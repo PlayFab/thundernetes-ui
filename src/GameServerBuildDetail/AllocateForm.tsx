@@ -24,7 +24,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
-    setRequestAccepted(undefined);
+    setRequestAccepted(false);
     setAssignedIP("");
     setAssignedPorts("");
     if (!sessionID) {

@@ -129,7 +129,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
-    setRequestAccepted(undefined);
+    setRequestAccepted(false);
 
     let build: any = {};
     try {
