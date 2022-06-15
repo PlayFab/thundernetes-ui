@@ -65,7 +65,7 @@ function GameServerTableItem({ clusterApi, gs, gsd }: GameServerTableItemProps) 
             </DialogTitle>
             <DialogContent>
               <DialogContentText>
-                {"Are you sure you want to delete the game server " + gs.metadata.name + "?"}
+                Are you sure you want to delete the game server {gs.metadata.name} ?
               </DialogContentText>
             </DialogContent>
             <DialogActions>

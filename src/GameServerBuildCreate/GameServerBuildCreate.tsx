@@ -206,7 +206,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
         }
         <Grid container item xs={7}>
           <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
-            {clusterName + ": Create a Build"}
+            {clusterName}: Create a Build
           </Typography>
         </Grid>
         <Grid container item xs={3} justifyContent="flex-end">

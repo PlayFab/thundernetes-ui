@@ -64,7 +64,7 @@ function GameServerBuildTableItem({ clusterApi, gsb }: GameServerBuildTableItemP
             </DialogTitle>
             <DialogContent>
               <DialogContentText>
-                {"Are you sure you want to delete the build " + gsb.metadata.name + "?"}
+                Are you sure you want to delete the build {gsb.metadata.name}?
               </DialogContentText>
             </DialogContent>
             <DialogActions>
