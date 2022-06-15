@@ -56,17 +56,15 @@ function GameServerBuildTableItem({ clusterApi, gsb }: GameServerBuildTableItemP
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
       >
         {!error &&
           <React.Fragment>
-            <DialogTitle id="alert-dialog-title">
-              {"Delete a Game Server Build?"}
+            <DialogTitle>
+              Delete game server build
             </DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                {"Are you sure you want to delete " + gsb.metadata.name + "?"}
+              <DialogContentText>
+                {"Are you sure you want to delete the build " + gsb.metadata.name + "?"}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -77,11 +75,11 @@ function GameServerBuildTableItem({ clusterApi, gsb }: GameServerBuildTableItemP
         }
         {error &&
           <React.Fragment>
-            <DialogTitle id="alert-dialog-title">
-              {"Delete request failed"}
+            <DialogTitle>
+              Delete request failed
             </DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-description">
+              <DialogContentText>
                 {error}
               </DialogContentText>
             </DialogContent>

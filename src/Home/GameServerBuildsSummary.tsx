@@ -10,7 +10,7 @@ function GameServerBuildsSummary({ perBuild }: GameServerBuildsSummaryProps) {
   let items = keys.map((buildName, index) => <GameServerBuildsSummaryItem key={index} buildName={buildName} values={perBuild[buildName]} />);
   return (
     <TableContainer component={Paper} sx={{ marginBottom: "40px" }}>
-      <Table sx={{ minWidth: 500 }} aria-label="simple table">
+      <Table sx={{ minWidth: 500 }}>
         <TableHead>
           <TableRow>
             <TableCell>Build Name</TableCell>

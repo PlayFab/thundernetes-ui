@@ -28,7 +28,7 @@ function GameServerTable({ clusterApi, gsList, gsdByName }: GameServerTableProps
   let items = gsList.map((gs, index) => <GameServerTableItem key={index} clusterApi={clusterApi} gs={gs} gsd={gsdByName[gs.metadata.name]} />);
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 500 }} aria-label="simple table">
+      <Table sx={{ minWidth: 500 }}>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>

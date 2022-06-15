@@ -194,7 +194,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
           <Grid item xs={12}>
             <Box display="flex" justifyContent="center">
               <Alert severity="success" onClose={() => { setRequestAccepted(undefined) }}>
-                {"Successfully created build"}
+                Successfully created build
               </Alert>
             </Box>
           </Grid>

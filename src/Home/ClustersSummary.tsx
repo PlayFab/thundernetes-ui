@@ -10,7 +10,7 @@ function ClustersSummary({ perCluster }: ClustersSummaryProps) {
   let items = keys.map((clusterName, index) => <ClustersSummaryItem key={index} clusterName={clusterName} values={perCluster[clusterName]} />);
   return (
     <TableContainer component={Paper} sx={{ marginBottom: "40px"}}>
-      <Table sx={{ minWidth: 500 }} aria-label="simple table">
+      <Table sx={{ minWidth: 500 }}>
         <TableHead>
           <TableRow>
             <TableCell>Cluster Name</TableCell>

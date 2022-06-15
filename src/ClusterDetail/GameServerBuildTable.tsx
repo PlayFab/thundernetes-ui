@@ -12,7 +12,7 @@ function GameServerBuildTable({ clusterApi, gsbList }: GameServerBuildTableProps
   let items = gsbList.map((gsb, index) => <GameServerBuildTableItem key={index} clusterApi={clusterApi} gsb={gsb} />);
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="simple table">
+      <Table>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>

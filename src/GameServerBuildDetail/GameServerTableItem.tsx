@@ -57,32 +57,30 @@ function GameServerTableItem({ clusterApi, gs, gsd }: GameServerTableItemProps) 
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
       >
         {!error &&
           <React.Fragment>
-            <DialogTitle id="alert-dialog-title">
-              {"Delete a Game Server Build?"}
+            <DialogTitle>
+              Delete game server
             </DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                {"Are you sure you want to delete " + gs.metadata.name + "?"}
+              <DialogContentText>
+                {"Are you sure you want to delete the game server " + gs.metadata.name + "?"}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose}>No</Button>
-              <Button onClick={deleteGameServer}>Yes</Button>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button onClick={deleteGameServer}>Delete</Button>
             </DialogActions>
           </React.Fragment>
         }
         {error &&
           <React.Fragment>
-            <DialogTitle id="alert-dialog-title">
-              {"Delete request failed"}
+            <DialogTitle>
+              Delete request failed
             </DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-description">
+              <DialogContentText>
                 {error}
               </DialogContentText>
             </DialogContent>

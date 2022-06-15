@@ -68,7 +68,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
         </Grid>
         <Grid item xs={1}>
           <Button sx={{ paddingLeft: "8px", paddingRight: "8px" }} variant="contained" color="primary" onClick={() => setSessionID(crypto.randomUUID())}>
-            {"New ID"}
+            New ID
           </Button>
         </Grid>
         <Grid item xs={1}>

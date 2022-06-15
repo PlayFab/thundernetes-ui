@@ -8,7 +8,7 @@ interface GameServerBuildSpecProps {
 function GameServerBuildSpec({ gsb }: GameServerBuildSpecProps) {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 500 }} aria-label="simple table">
+      <Table sx={{ minWidth: 500 }}>
         <TableBody>
           <TableRow>
             <TableCell><Typography>Build ID</Typography></TableCell>

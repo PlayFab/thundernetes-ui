@@ -11,7 +11,7 @@ function NodeTable({ nodeData }: NodeTableProps) {
 
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="simple table">
+      <Table>
         <TableHead>
           <TableRow>
           <TableCell>Node name</TableCell>
