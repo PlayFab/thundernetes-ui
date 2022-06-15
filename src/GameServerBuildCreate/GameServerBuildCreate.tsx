@@ -135,7 +135,6 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
     try {
       build = parse(buildYaml);
     } catch {
-      console.log("Not a valid yaml file");
       setError("Not a valid yaml file");
       return;
     }
