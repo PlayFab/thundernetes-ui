@@ -22,7 +22,6 @@ function GameServerBuildTableItem({ clusterApi, gsb }: GameServerBuildTableItemP
       if (response.status === 200) {
         setOpen(false);
       } else {
-        console.log(response);
         setError("API denied the request: " + response.statusText);
       }
     }).catch(err => {

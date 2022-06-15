@@ -30,12 +30,12 @@ function GameServerTableItem({ clusterApi, gs, gsd }: GameServerTableItemProps) 
   };
 
   const handleClickOpen = () => {
+    setError(undefined);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setError(undefined);
   };
 
   return (
