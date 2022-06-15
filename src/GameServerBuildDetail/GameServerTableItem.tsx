@@ -22,7 +22,7 @@ function GameServerTableItem({ clusterApi, gs, gsd }: GameServerTableItemProps) 
       if (response.status === 200) {
         setOpen(false);
       } else {
-        setError("API denied the request: " + response.text());
+        setError("API denied the request: " + response.statusText);
       }
     }).catch(err => {
       setError("Couldn't reach API at: " + clusterApi);

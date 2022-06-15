@@ -15,14 +15,15 @@ function GameServerBuildTableItem({ clusterApi, gsb }: GameServerBuildTableItemP
   const [error, setError] = useState<string>();
 
   const deleteGameServerBuild = () => {
-    fetchWithTimeout(clusterApi + "gameserverbuilds/" + gsb.metadata.namespace + "/" + gsb.metadata.name, {
+    fetchWithTimeout(clusterApi + "gameserverbuild/" + gsb.metadata.namespace + "/" + gsb.metadata.name, {
       timeout: 5000,
       method: "DELETE"
     }).then(response => {
       if (response.status === 200) {
         setOpen(false);
       } else {
-        setError("API denied the request: " + response.text());
+        console.log(response);
+        setError("API denied the request: " + response.statusText);
       }
     }).catch(err => {
       setError("Couldn't reach API at: " + clusterApi);
@@ -30,12 +31,12 @@ function GameServerBuildTableItem({ clusterApi, gsb }: GameServerBuildTableItemP
   };
 
   const handleClickOpen = () => {
+    setError(undefined);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setError(undefined);
   };
 
   return (

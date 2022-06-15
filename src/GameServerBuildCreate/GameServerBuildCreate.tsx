@@ -27,7 +27,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
     fetchWithTimeout("https://raw.githubusercontent.com/PlayFab/thundernetes/main/samples/netcore/sample.yaml", { timeout: 5000 })
       .then(response => {
         if (response.status === 200) {
-          return response.text();
+          return response.statusText;
         }
         setTemplatesErrors(prev => new Set(
           prev.add("Couldn't load default template")
