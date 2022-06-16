@@ -1,8 +1,9 @@
 import { useState } from "react";
 import GameServerTableItem from "./GameServerTableItem";
-import { Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Paper } from "@mui/material";
+import { Box, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Paper } from "@mui/material";
 import { GameServer } from "../types";
 import TablePaginationActions from "../Common/TablePaginationActions";
+import { visuallyHidden } from '@mui/utils';
 
 interface GameServerTableProps {
   clusterApi: string,
@@ -38,7 +39,7 @@ function GameServerTable({ clusterApi, gsList, gsdByName }: GameServerTableProps
             <TableCell>Public IP</TableCell>
             <TableCell>Ports</TableCell>
             <TableCell>Player Count</TableCell>
-            <TableCell />
+            <TableCell aria-label="Actions"><Box sx={visuallyHidden}>Actions</Box></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

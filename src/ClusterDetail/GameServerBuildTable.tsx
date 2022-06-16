@@ -1,6 +1,7 @@
 import GameServerBuildTableItem from "./GameServerBuildTableItem";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { GameServerBuild } from "../types";
+import { visuallyHidden } from '@mui/utils';
 
 interface GameServerBuildTableProps {
   clusterApi: string,
@@ -21,7 +22,7 @@ function GameServerBuildTable({ clusterApi, gsbList }: GameServerBuildTableProps
             <TableCell>StandingBy</TableCell>
             <TableCell>Crashes</TableCell>
             <TableCell>Health</TableCell>
-            <TableCell />
+            <TableCell aria-label="Actions"><Box sx={visuallyHidden}>Actions</Box></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
