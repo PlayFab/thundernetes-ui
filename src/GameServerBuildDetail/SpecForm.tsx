@@ -72,7 +72,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container justifyContent="left" spacing={2} sx={{ flexGrow: 1, marginBottom: "40px" }}>
+      <Grid container justifyContent="left" alignItems="center" spacing={2} sx={{ flexGrow: 1, marginBottom: "40px" }}>
         <Grid item xs={2}>
           <TextField name="standingBy" id="standingBy" size="small" label="StandingBy" value={standingBy === undefined ? "" : standingBy} onChange={handleChange} />
         </Grid>
@@ -86,7 +86,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
         </Grid>
         {(requestAccepted) &&
           <Grid item xs={1}>
-            <Done color="success" sx={{ marginTop: "5px" }} />
+            <Done color="success" />
           </Grid>
         }
         {(error) &&

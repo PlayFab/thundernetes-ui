@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { Alert, Box, Button, Grid, IconButton, InputAdornment, TextField, Tooltip } from "@mui/material";
-import { ContentCopy, Done } from "@mui/icons-material";
+import { ContentCopy } from "@mui/icons-material";
 import { fetchWithTimeout } from "../utils";
 
 interface AllocateFormProps {
@@ -13,7 +13,6 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
   const [assignedIP, setAssignedIP] = useState("");
   const [assignedPorts, setAssignedPorts] = useState("");
   const [error, setError] = useState<string>();
-  const [requestAccepted, setRequestAccepted] = useState<boolean>();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === "sessionID") {
@@ -24,7 +23,6 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
-    setRequestAccepted(false);
     setAssignedIP("");
     setAssignedPorts("");
     if (!sessionID) {
@@ -44,7 +42,6 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
       body: JSON.stringify(body)
     }).then(response => {
       if (response.status === 200) {
-        setRequestAccepted(true);
         return response.json();
       } else {
         setError("API denied the request: " + response.statusText);
@@ -62,8 +59,8 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container justifyContent="left" spacing={2} sx={{ flexGrow: 1, marginBottom: "40px" }}>
-        <Grid item xs={5}>
+      <Grid container justifyContent="left" alignItems="center" spacing={2} sx={{ flexGrow: 1, marginBottom: "40px" }}>
+        <Grid item xs={4}>
           <TextField fullWidth name="sessionID" size="small" label="SessionID" value={sessionID} onChange={handleChange} />
         </Grid>
         <Grid item xs={1}>
@@ -71,17 +68,12 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
             New ID
           </Button>
         </Grid>
-        <Grid item xs={1}>
+        <Grid item xs={2}>
           <Button variant="contained" color="primary" type="submit">
             Allocate
           </Button>
         </Grid>
-        {(requestAccepted) &&
-          <Grid item xs={1}>
-            <Done color="success" sx={{ marginTop: "5px" }} />
-          </Grid>
-        }
-        <Grid item xs={4} />
+        <Grid item xs={5} />
         {(!error && assignedIP && assignedPorts) &&
           <React.Fragment>
             <Grid item xs={3}>

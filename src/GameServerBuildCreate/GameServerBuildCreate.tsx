@@ -198,13 +198,13 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
         </React.Fragment>
       }
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} alignItems="center">
           <Grid container item xs={7}>
             <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
               {clusterName}: Create a Build
             </Typography>
           </Grid>
-          <Grid container item xs={3} justifyContent="flex-end">
+          <Grid item xs={3} justifyContent="flex-end">
             <FormControl sx={{ m: 1 }} fullWidth size="small">
               <InputLabel id="template-select">Template</InputLabel>
               <Select
@@ -218,8 +218,8 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid container item xs={1} justifyContent="flex-end">
-            <Button variant="contained" color="primary" type="submit" sx={{ height: "40px", marginTop: "8px" }}>
+          <Grid item xs={1} justifyContent="flex-end">
+            <Button variant="contained" color="primary" type="submit">
               Create
             </Button>
           </Grid>
