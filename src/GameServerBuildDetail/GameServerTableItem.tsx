@@ -69,8 +69,8 @@ function GameServerTableItem({ clusterApi, gs, gsd }: GameServerTableItemProps) 
               </DialogContentText>
             </DialogContent>
             <DialogActions>
+              <Button color="error" onClick={deleteGameServer}>Delete</Button>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={deleteGameServer}>Delete</Button>
             </DialogActions>
           </React.Fragment>
         }

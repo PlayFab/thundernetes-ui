@@ -68,8 +68,8 @@ function GameServerBuildTableItem({ clusterApi, gsb }: GameServerBuildTableItemP
               </DialogContentText>
             </DialogContent>
             <DialogActions>
+              <Button color="error" onClick={deleteGameServerBuild}>Delete</Button>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={deleteGameServerBuild}>Delete</Button>
             </DialogActions>
           </React.Fragment>
         }
