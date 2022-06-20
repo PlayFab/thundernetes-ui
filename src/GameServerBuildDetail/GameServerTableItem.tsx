@@ -3,6 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { GameServer } from "../types";
 import { DeleteOutline } from "@mui/icons-material";
 import { fetchWithTimeout } from "../utils";
+import HealthStatusColoredCircle from "../Common/HealthStatusColoredCircle";
 
 interface GameServerTableItemProps {
   clusterApi: string,
@@ -43,7 +44,7 @@ function GameServerTableItem({ clusterApi, gs, gsd }: GameServerTableItemProps) 
       <TableRow>
         <TableCell>{gs.metadata.name}</TableCell>
         <TableCell>{gs.metadata.namespace}</TableCell>
-        <TableCell>{gs.status.health}</TableCell>
+        <TableCell><HealthStatusColoredCircle health={gs.status.health} />{gs.status.health}</TableCell>
         <TableCell>{gs.status.state}</TableCell>
         <TableCell>{gs.status.publicIP}</TableCell>
         <TableCell>{gs.status.ports}</TableCell>

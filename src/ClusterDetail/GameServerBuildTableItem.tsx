@@ -4,6 +4,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { GameServerBuild } from "../types";
 import { DeleteOutline } from "@mui/icons-material";
 import { fetchWithTimeout } from "../utils";
+import HealthStatusColoredCircle from "../Common/HealthStatusColoredCircle";
 
 interface GameServerBuildTableItemProps {
   clusterApi: string
@@ -46,7 +47,7 @@ function GameServerBuildTableItem({ clusterApi, gsb }: GameServerBuildTableItemP
         <TableCell>{gsb.status.currentActive ? gsb.status.currentActive : 0}</TableCell>
         <TableCell>{gsb.status.currentStandingByReadyDesired}</TableCell>
         <TableCell>{gsb.status.crashesCount ? gsb.status.crashesCount : 0}</TableCell>
-        <TableCell>{gsb.status.health}</TableCell>
+        <TableCell><HealthStatusColoredCircle health={gsb.status.health} />{gsb.status.health}</TableCell>
         <TableCell>
           <IconButton color="error" component="span" onClick={handleClickOpen}>
             <DeleteOutline />
