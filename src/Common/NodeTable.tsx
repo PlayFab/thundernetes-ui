@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { useMemo } from "react";
 import NodeTableItem from "./NodeTableItem";
 
 interface NodeTableProps {
@@ -6,15 +7,17 @@ interface NodeTableProps {
 }
 
 function NodeTable({ nodeData }: NodeTableProps) {
-  const nodeNames = Object.keys(nodeData).sort();
-  const items = nodeNames.map((nodeName, index) => <NodeTableItem key={index} nodeName={nodeName} values={nodeData[nodeName]}/>);
+  const items = useMemo(() => {
+    const nodeNames = Object.keys(nodeData).sort();
+    return nodeNames.map((nodeName, index) => <NodeTableItem key={index} nodeName={nodeName} values={nodeData[nodeName]} />);
+  }, [nodeData]);
 
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
-          <TableCell>Node name</TableCell>
+            <TableCell>Node name</TableCell>
             <TableCell>Active</TableCell>
             <TableCell>StandingBy</TableCell>
           </TableRow>

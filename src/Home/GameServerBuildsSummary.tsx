@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { useMemo } from "react";
 import GameServerBuildsSummaryItem from "./GameServerBuildsSummaryItem";
 
 interface GameServerBuildsSummaryProps {
@@ -6,8 +7,11 @@ interface GameServerBuildsSummaryProps {
 }
 
 function GameServerBuildsSummary({ perBuild }: GameServerBuildsSummaryProps) {
-  let keys = Object.keys(perBuild).sort();
-  let items = keys.map((buildName, index) => <GameServerBuildsSummaryItem key={index} buildName={buildName} values={perBuild[buildName]} />);
+  const items = useMemo(() => {
+    const keys = Object.keys(perBuild).sort();
+    return keys.map((buildName, index) => <GameServerBuildsSummaryItem key={index} buildName={buildName} values={perBuild[buildName]} />);
+  }, [perBuild]);
+
   return (
     <TableContainer component={Paper} sx={{ marginBottom: "40px" }}>
       <Table sx={{ minWidth: 500 }}>

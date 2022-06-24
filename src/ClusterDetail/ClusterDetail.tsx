@@ -1,5 +1,5 @@
 import React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Alert, Box, Button, Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
@@ -110,15 +110,17 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
     };
   }, [getGameServers, getGameServerBuilds]);
 
-  const nodeData = groupDataByNode(gsList);
-  const errorsArray = Array.from(errors).sort();
-  const errorMessages = errorsArray.map((error, index) =>
-    <Box key={index} display="flex" justifyContent="center">
-      <Alert severity="error" onClose={() => { handleCloseAlert(error) }}>
-        {error}
-      </Alert>
-    </Box>
-  );
+  const nodeData = useMemo(() => groupDataByNode(gsList), [gsList]);
+  const errorMessages = useMemo(() => {
+    const errorsArray = Array.from(errors).sort();
+    return errorsArray.map((error, index) =>
+      <Box key={index} display="flex" justifyContent="center">
+        <Alert severity="error" onClose={() => { handleCloseAlert(error) }}>
+          {error}
+        </Alert>
+      </Box>
+    );
+  }, [errors, handleCloseAlert]);
 
   return (
     <React.Fragment>

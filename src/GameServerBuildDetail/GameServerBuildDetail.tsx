@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Alert, Box, Typography } from "@mui/material";
@@ -149,16 +149,18 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
     };
   }, [getGameServerBuild, getGameServers, getGameServerDetails]);
 
-  const nodeData = groupDataByNode(gsList);
-  const gsdByName = groupDetailsByName(gsdList);
-  const errorsArray = Array.from(errors).sort();
-  const errorMessages = errorsArray.map((error, index) =>
-    <Box key={index} display="flex" justifyContent="center">
-      <Alert severity="error" onClose={() => { handleCloseAlert(error) }}>
-        {error}
-      </Alert>
-    </Box>
-  );
+  const nodeData = useMemo(() => groupDataByNode(gsList), [gsList]);
+  const gsdByName = useMemo(() => groupDetailsByName(gsdList), [gsdList]);
+  const errorMessages = useMemo(() => {
+    const errorsArray = Array.from(errors).sort();
+    return errorsArray.map((error, index) =>
+      <Box key={index} display="flex" justifyContent="center">
+        <Alert severity="error" onClose={() => { handleCloseAlert(error) }}>
+          {error}
+        </Alert>
+      </Box>
+    );
+  }, [errors, handleCloseAlert]);
 
   return (
     <React.Fragment>

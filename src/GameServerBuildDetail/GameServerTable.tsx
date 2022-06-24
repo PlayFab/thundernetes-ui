@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import GameServerTableItem from "./GameServerTableItem";
 import { Box, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Paper } from "@mui/material";
 import { GameServer } from "../types";
@@ -25,8 +25,11 @@ function GameServerTable({ clusterApi, gsList, gsdByName }: GameServerTableProps
     setPage(newPage);
   };
 
-  gsList = gsList.sort((a: GameServer, b: GameServer) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
-  let items = gsList.map((gs, index) => <GameServerTableItem key={index} clusterApi={clusterApi} gs={gs} gsd={gsdByName[gs.metadata.name]} />);
+  const items = useMemo(() => {
+    const sortedGs = gsList.sort((a: GameServer, b: GameServer) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
+    return sortedGs.map((gs, index) => <GameServerTableItem key={index} clusterApi={clusterApi} gs={gs} gsd={gsdByName[gs.metadata.name]} />);
+  }, [clusterApi, gsList, gsdByName]);
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }}>

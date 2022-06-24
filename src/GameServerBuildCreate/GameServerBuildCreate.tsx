@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Alert, Box, Button, FormControl, Grid, InputLabel, ListSubheader, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import Editor from "@monaco-editor/react";
@@ -78,7 +78,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
     });
   }, [clusters]);
 
-  const makeSelectItems = (data: Map<string, Array<GameServerBuild>>) => {
+  const makeSelectItems = useCallback((data: Map<string, Array<GameServerBuild>>) => {
     let selectItems: Array<JSX.Element> = [<MenuItem key="default" value={defaultTemplate}>Default</MenuItem>];
     const clusterNames = Array.from(data.keys()).sort();
     clusterNames.forEach((clusterName) => {
@@ -90,7 +90,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
       selectItems = selectItems.concat(clusterSelectItems);
     });
     return selectItems;
-  };
+  }, [defaultTemplate]);
 
   const adaptGsb = (gsb: GameServerBuild) => {
     const newGsb = {
@@ -169,15 +169,17 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
     getAllBuilds();
   }, [getAllBuilds, getDefaultTemplate]);
 
-  const selectItems = makeSelectItems(gsbTemplates);
-  const templateErrorsArray = Array.from(templatesErrors).sort();
-  const templateErrorMessages = templateErrorsArray.map((error, index) =>
-    <Box key={index} display="flex" justifyContent="center">
-      <Alert severity="error" onClose={() => handleCloseAlert(error)}>
-        {error}
-      </Alert>
-    </Box>
-  );
+  const selectItems = useMemo(() => makeSelectItems(gsbTemplates), [gsbTemplates, makeSelectItems]);
+  const templateErrorMessages = useMemo(() => {
+    const templateErrorsArray = Array.from(templatesErrors).sort();
+    return templateErrorsArray.map((error, index) =>
+      <Box key={index} display="flex" justifyContent="center">
+        <Alert severity="error" onClose={() => handleCloseAlert(error)}>
+          {error}
+        </Alert>
+      </Box>
+    );
+  }, [handleCloseAlert, templatesErrors]);
 
   return (
     <React.Fragment>
