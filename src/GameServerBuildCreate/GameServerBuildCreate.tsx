@@ -109,8 +109,11 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
   };
 
   const handleCloseAlert = (error: string) => {
-    templatesErrors.delete(error);
-    setTemplatesErrors(prev => new Set(prev));
+    setTemplatesErrors(prev => {
+      const newTemplateErrors = new Set(prev);
+      newTemplateErrors.delete(error);
+      return newTemplateErrors;
+    });
   };
 
   const handleTemplateChange = (event: SelectChangeEvent) => {

@@ -68,8 +68,11 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
   }, [clusterName, clusterApi]);
 
   const handleCloseAlert = (error: string) => {
-    errors.delete(error);
-    setErrors(prev => new Set(prev));
+    setErrors(prev => {
+      const newErrors = new Set(prev);
+      newErrors.delete(error);
+      return newErrors;
+    });
   };
 
   const groupDataByNode = (gsList: Array<GameServer>) => {
