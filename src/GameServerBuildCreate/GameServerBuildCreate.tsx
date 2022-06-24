@@ -108,28 +108,28 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
     return newGsb;
   };
 
-  const handleCloseAlert = (error: string) => {
+  const handleCloseAlert = useCallback((error: string) => {
     setTemplatesErrors(prev => {
       const newTemplateErrors = new Set(prev);
       newTemplateErrors.delete(error);
       return newTemplateErrors;
     });
-  };
+  }, []);
 
-  const handleTemplateChange = (event: SelectChangeEvent) => {
+  const handleTemplateChange = useCallback((event: SelectChangeEvent) => {
     if (event && event.target) {
       setCurrentTemplate(event.target.value as string);
       setBuildYaml(event.target.value as string);
     }
-  };
+  }, []);
 
-  const handleYamlChange = (value: string | undefined) => {
+  const handleYamlChange = useCallback((value: string | undefined) => {
     if (value) {
       setBuildYaml(value);
     }
-  };
+  }, []);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
     setRequestAccepted(false);
@@ -162,7 +162,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
     }).catch(err => {
       setError("Couldn't reach API at: " + clusterApi);
     });
-  };
+  }, [buildYaml, clusterApi]);
 
   useEffect(() => {
     getDefaultTemplate();
@@ -172,7 +172,7 @@ function GameServerBuildCreate({ clusters }: GameServerBuildCreateProps) {
   const selectItems = makeSelectItems(gsbTemplates);
   const templateErrorsArray = Array.from(templatesErrors).sort();
   const templateErrorMessages = templateErrorsArray.map((error, index) =>
-    <Box display="flex" justifyContent="center">
+    <Box key={index} display="flex" justifyContent="center">
       <Alert severity="error" onClose={() => handleCloseAlert(error)}>
         {error}
       </Alert>

@@ -123,13 +123,13 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
     return gsdByName;
   };
 
-  const handleCloseAlert = (error: string) => {
+  const handleCloseAlert = useCallback((error: string) => {
     setErrors(prev => {
       const newErrors = new Set(prev);
       newErrors.delete(error);
       return newErrors;
     });
-  };
+  }, []);
 
   useEffect(() => {
     getGameServerBuild();

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { Alert, Box, Button, Grid, IconButton, InputAdornment, TextField, Tooltip } from "@mui/material";
 import { ContentCopy } from "@mui/icons-material";
 import { fetchWithTimeout } from "../utils";
@@ -14,13 +14,13 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
   const [assignedPorts, setAssignedPorts] = useState("");
   const [error, setError] = useState<string>();
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === "sessionID") {
       setSessionID(event.target.value);
     }
-  };
+  }, []);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
     setAssignedIP("");
@@ -55,7 +55,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
     }).catch(err => {
       setError("Couldn't reach API at: " + allocateApi);
     });
-  };
+  }, [allocateApi, buildID, sessionID]);
 
   return (
     <form onSubmit={handleSubmit}>

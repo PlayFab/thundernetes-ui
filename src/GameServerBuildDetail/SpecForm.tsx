@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { Alert, Box, Button, Grid, TextField } from "@mui/material";
 import { Done } from "@mui/icons-material";
 import { GameServerBuild } from "../types";
@@ -15,7 +15,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
   const [error, setError] = useState<string>();
   const [requestAccepted, setRequestAccepted] = useState<boolean>();
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const isInt = /^\d+$/;
     if (!(isInt.test(event.target.value) || event.target.value === "")) {
       return;
@@ -34,9 +34,9 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
         setStandingBy(Number(event.target.value));
       }
     }
-  }
+  }, []);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
     setRequestAccepted(false);
@@ -68,7 +68,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
     }).catch(err => {
       setError("Couldn't reach API at: " + clusterApi);
     });
-  }
+  }, [clusterApi, max, standingBy, gsb.metadata.name, gsb.metadata.namespace]);
 
   return (
     <form onSubmit={handleSubmit}>

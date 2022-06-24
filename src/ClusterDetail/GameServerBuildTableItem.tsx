@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, TableCell, TableRow } from "@mui/material";
 import { GameServerBuild } from "../types";
@@ -15,7 +15,7 @@ function GameServerBuildTableItem({ clusterApi, gsb }: GameServerBuildTableItemP
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string>();
 
-  const deleteGameServerBuild = () => {
+  const deleteGameServerBuild = useCallback(() => {
     fetchWithTimeout(clusterApi + "gameserverbuilds/" + gsb.metadata.namespace + "/" + gsb.metadata.name, {
       timeout: 5000,
       method: "DELETE"
@@ -28,16 +28,16 @@ function GameServerBuildTableItem({ clusterApi, gsb }: GameServerBuildTableItemP
     }).catch(err => {
       setError("Couldn't reach API at: " + clusterApi);
     });
-  };
+  }, [clusterApi, gsb.metadata.name, gsb.metadata.namespace]);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = useCallback(() => {
     setError(undefined);
     setOpen(true);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+  }, []);
 
   return (
     <React.Fragment>

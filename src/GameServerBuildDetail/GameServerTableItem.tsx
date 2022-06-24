@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, TableCell, TableRow } from "@mui/material";
 import { GameServer } from "../types";
 import { DeleteOutline } from "@mui/icons-material";
@@ -15,7 +15,7 @@ function GameServerTableItem({ clusterApi, gs, gsd }: GameServerTableItemProps) 
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string>();
 
-  const deleteGameServer = () => {
+  const deleteGameServer = useCallback(() => {
     fetchWithTimeout(clusterApi + "gameservers/" + gs.metadata.namespace + "/" + gs.metadata.name, {
       timeout: 5000,
       method: "DELETE"
@@ -28,16 +28,16 @@ function GameServerTableItem({ clusterApi, gs, gsd }: GameServerTableItemProps) 
     }).catch(err => {
       setError("Couldn't reach API at: " + clusterApi);
     });
-  };
+  }, [clusterApi, gs.metadata.name, gs.metadata.namespace]);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = useCallback(() => {
     setError(undefined);
     setOpen(true);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+  }, []);
 
   return (
     <React.Fragment>

@@ -75,10 +75,13 @@ function Home({ clusters }: HomeProps) {
     });
   }, [clusters]);
 
-  const handleCloseAlert = (error: string) => {
-    errors.delete(error);
-    setErrors(prev => new Set(prev));
-  };
+  const handleCloseAlert = useCallback((error: string) => {
+    setErrors(prev => {
+      const newErrors = new Set(prev);
+      newErrors.delete(error);
+      return newErrors;
+    });
+  }, []);
 
   useEffect(() => {
     getAllBuilds();

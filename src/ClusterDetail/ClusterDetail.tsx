@@ -67,13 +67,13 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
       });
   }, [clusterName, clusterApi]);
 
-  const handleCloseAlert = (error: string) => {
+  const handleCloseAlert = useCallback((error: string) => {
     setErrors(prev => {
       const newErrors = new Set(prev);
       newErrors.delete(error);
       return newErrors;
     });
-  };
+  }, []);
 
   const groupDataByNode = (gsList: Array<GameServer>) => {
     const emptyValues = () => {
