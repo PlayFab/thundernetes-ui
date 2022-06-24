@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { Alert, Box, Button, Grid, TextField } from "@mui/material";
 import { Done } from "@mui/icons-material";
 import { GameServerBuild } from "../types";
@@ -15,7 +15,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
   const [error, setError] = useState<string>();
   const [requestAccepted, setRequestAccepted] = useState<boolean>();
 
-  const handleChange = (event: any) => {
+  const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const isInt = /^\d+$/;
     if (!(isInt.test(event.target.value) || event.target.value === "")) {
       return;
@@ -34,12 +34,12 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
         setStandingBy(Number(event.target.value));
       }
     }
-  }
+  }, []);
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
-    setRequestAccepted(undefined);
+    setRequestAccepted(false);
     if (standingBy === undefined || max === undefined) {
       setError("standingBy and max values cannot be empty");
       return;
@@ -68,11 +68,11 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
     }).catch(err => {
       setError("Couldn't reach API at: " + clusterApi);
     });
-  }
+  }, [clusterApi, max, standingBy, gsb.metadata.name, gsb.metadata.namespace]);
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container justifyContent="left" spacing={2} sx={{ flexGrow: 1, marginBottom: "40px" }}>
+      <Grid container justifyContent="left" alignItems="center" spacing={2} sx={{ flexGrow: 1, marginBottom: "40px" }}>
         <Grid item xs={2}>
           <TextField name="standingBy" id="standingBy" size="small" label="StandingBy" value={standingBy === undefined ? "" : standingBy} onChange={handleChange} />
         </Grid>
@@ -86,7 +86,7 @@ function SpecForm({ clusterApi, gsb }: SpecFormProps) {
         </Grid>
         {(requestAccepted) &&
           <Grid item xs={1}>
-            <Done color="success" sx={{ marginTop: "5px" }} />
+            <Done color="success" />
           </Grid>
         }
         {(error) &&

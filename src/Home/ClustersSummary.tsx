@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { useMemo } from "react";
 import ClustersSummaryItem from "./ClustersSummaryItem";
 
 interface ClustersSummaryProps {
@@ -6,11 +7,14 @@ interface ClustersSummaryProps {
 }
 
 function ClustersSummary({ perCluster }: ClustersSummaryProps) {
-  let keys = Object.keys(perCluster).sort();
-  let items = keys.map((clusterName, index) => <ClustersSummaryItem key={index} clusterName={clusterName} values={perCluster[clusterName]} />);
+  const items = useMemo(() => {
+    const keys = Object.keys(perCluster).sort();
+    return keys.map((clusterName, index) => <ClustersSummaryItem key={index} clusterName={clusterName} values={perCluster[clusterName]} />);
+  }, [perCluster]);
+
   return (
     <TableContainer component={Paper} sx={{ marginBottom: "40px"}}>
-      <Table sx={{ minWidth: 500 }} aria-label="simple table">
+      <Table sx={{ minWidth: 500 }}>
         <TableHead>
           <TableRow>
             <TableCell>Cluster Name</TableCell>

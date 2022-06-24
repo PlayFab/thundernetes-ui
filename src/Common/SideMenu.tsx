@@ -1,6 +1,7 @@
 import { Box, Divider, Drawer, List, Toolbar } from '@mui/material';
 import { AccountTree, Home } from '@mui/icons-material';
 import ListItemLink from './ListItemLink';
+import { useMemo } from 'react';
 
 interface SideMenuProps {
   clusterNames: Array<string>,
@@ -8,6 +9,12 @@ interface SideMenuProps {
 }
 
 function SideMenu({ clusterNames, width }: SideMenuProps) {
+  const items = useMemo(() => {
+    return clusterNames.map((entry, index) => (
+      <ListItemLink key={index} icon={<AccountTree />} to={entry} primary={entry} />
+    ))
+  }, [clusterNames]);
+
   return (
     <Drawer
       sx={{
@@ -28,9 +35,7 @@ function SideMenu({ clusterNames, width }: SideMenuProps) {
         </List>
         <Divider />
         <List>
-          {clusterNames.map((entry, index) => (
-            <ListItemLink key={index} icon={<AccountTree />} to={entry} primary={entry} />
-          ))}
+          {items}
         </List>
       </Box>
     </Drawer>

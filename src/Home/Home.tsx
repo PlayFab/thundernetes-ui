@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Alert, Box, Typography } from "@mui/material";
 import ClustersSummary from "./ClustersSummary";
@@ -25,7 +25,7 @@ function Home({ clusters }: HomeProps) {
     let total: Record<string, number> = emptyValues();
     let perCluster: Record<string, Record<string, number>> = {};
     let perBuild: Record<string, Record<string, number>> = {};
-    let keys = Array.from(data.keys());
+    const keys = Array.from(data.keys());
     keys.forEach((clusterName) => {
       if (!perCluster[clusterName]) {
         perCluster[clusterName] = emptyValues();
@@ -75,10 +75,13 @@ function Home({ clusters }: HomeProps) {
     });
   }, [clusters]);
 
-  const handleCloseAlert = (error: string) => {
-    errors.delete(error);
-    setErrors(prev => new Set(prev));
-  };
+  const handleCloseAlert = useCallback((error: string) => {
+    setErrors(prev => {
+      const newErrors = new Set(prev);
+      newErrors.delete(error);
+      return newErrors;
+    });
+  }, []);
 
   useEffect(() => {
     getAllBuilds();
@@ -86,15 +89,17 @@ function Home({ clusters }: HomeProps) {
     return () => clearInterval(interval);
   }, [getAllBuilds]);
 
-  const [total, perCluster, perBuild] = groupValues(gsbMap);
-  const errorsArray = Array.from(errors).sort();
-  const errorMessages = errorsArray.map((error, index) =>
-    <Box key={index} display="flex" justifyContent="center">
-      <Alert severity="error" onClose={() => handleCloseAlert(error)}>
-        {error}
-      </Alert>
-    </Box>
-  );
+  const [total, perCluster, perBuild] = useMemo(() => groupValues(gsbMap), [gsbMap]);
+  const errorMessages = useMemo(() => {
+    const errorsArray = Array.from(errors).sort();
+    return errorsArray.map((error, index) =>
+      <Box key={index} display="flex" justifyContent="center">
+        <Alert severity="error" onClose={() => handleCloseAlert(error)}>
+          {error}
+        </Alert>
+      </Box>
+    );
+  }, [errors, handleCloseAlert]);
 
   return (
     <React.Fragment>

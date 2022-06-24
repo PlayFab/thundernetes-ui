@@ -8,7 +8,7 @@ interface GameServerBuildStatusProps {
 function GameServerBuildStatus({ gsb }: GameServerBuildStatusProps) {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 500 }} aria-label="simple table">
+      <Table sx={{ minWidth: 500 }}>
         <TableBody>
           <TableRow>
             <TableCell><Typography>Health</Typography></TableCell>

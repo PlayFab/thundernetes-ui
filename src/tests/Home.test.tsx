@@ -18,7 +18,10 @@ const gameServerBuildsCluster1: Array<GameServerBuild> = [
       standingBy: 2,
       max: 4,
       portsToExpose: [80],
-      crashesToMarkUnhealthy: 0
+      crashesToMarkUnhealthy: 0,
+      template: {
+        metadata: {}
+      }
     },
     status: {
       currentActive: 1,
@@ -42,7 +45,10 @@ const gameServerBuildsCluster1: Array<GameServerBuild> = [
       standingBy: 2,
       max: 4,
       portsToExpose: [80],
-      crashesToMarkUnhealthy: 0
+      crashesToMarkUnhealthy: 0,
+      template: {
+        metadata: {}
+      }
     },
     status: {
       currentActive: 2,
@@ -69,7 +75,10 @@ const gameServerBuildsCluster2: Array<GameServerBuild> = [
       standingBy: 2,
       max: 4,
       portsToExpose: [80],
-      crashesToMarkUnhealthy: 0
+      crashesToMarkUnhealthy: 0,
+      template: {
+        metadata: {}
+      }
     },
     status: {
       currentActive: 3,
@@ -93,7 +102,10 @@ const gameServerBuildsCluster2: Array<GameServerBuild> = [
       standingBy: 2,
       max: 4,
       portsToExpose: [80],
-      crashesToMarkUnhealthy: 0
+      crashesToMarkUnhealthy: 0,
+      template: {
+        metadata: {}
+      }
     },
     status: {
       currentActive: 4,

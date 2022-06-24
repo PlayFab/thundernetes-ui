@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import GameServerTableItem from "./GameServerTableItem";
-import { Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Paper } from "@mui/material";
+import { Box, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Paper } from "@mui/material";
 import { GameServer } from "../types";
 import TablePaginationActions from "../Common/TablePaginationActions";
+import { visuallyHidden } from '@mui/utils';
 
 interface GameServerTableProps {
+  clusterApi: string,
   gsList: Array<GameServer>,
   gsdByName: Record<string, Record<string, number>>
 }
 
-function GameServerTable({ gsList, gsdByName }: GameServerTableProps) {
+function GameServerTable({ clusterApi, gsList, gsdByName }: GameServerTableProps) {
   const [page, setPage] = useState(0);
   const rowsPerPage = 10;
 
@@ -23,11 +25,14 @@ function GameServerTable({ gsList, gsdByName }: GameServerTableProps) {
     setPage(newPage);
   };
 
-  gsList = gsList.sort((a: GameServer, b: GameServer) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
-  let items = gsList.map((gs, index) => <GameServerTableItem key={index} gs={gs} gsd={gsdByName[gs.metadata.name]} />);
+  const items = useMemo(() => {
+    const sortedGs = gsList.sort((a: GameServer, b: GameServer) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
+    return sortedGs.map((gs, index) => <GameServerTableItem key={index} clusterApi={clusterApi} gs={gs} gsd={gsdByName[gs.metadata.name]} />);
+  }, [clusterApi, gsList, gsdByName]);
+
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 500 }} aria-label="simple table">
+      <Table sx={{ minWidth: 500 }}>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
@@ -37,6 +42,7 @@ function GameServerTable({ gsList, gsdByName }: GameServerTableProps) {
             <TableCell>Public IP</TableCell>
             <TableCell>Ports</TableCell>
             <TableCell>Player Count</TableCell>
+            <TableCell aria-label="Actions"><Box sx={visuallyHidden}>Actions</Box></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

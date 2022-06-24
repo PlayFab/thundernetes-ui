@@ -1,5 +1,5 @@
 import React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Alert, Box, Button, Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
@@ -67,10 +67,13 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
       });
   }, [clusterName, clusterApi]);
 
-  const handleCloseAlert = (error: string) => {
-    errors.delete(error);
-    setErrors(prev => new Set(prev));
-  };
+  const handleCloseAlert = useCallback((error: string) => {
+    setErrors(prev => {
+      const newErrors = new Set(prev);
+      newErrors.delete(error);
+      return newErrors;
+    });
+  }, []);
 
   const groupDataByNode = (gsList: Array<GameServer>) => {
     const emptyValues = () => {
@@ -107,15 +110,17 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
     };
   }, [getGameServers, getGameServerBuilds]);
 
-  const nodeData = groupDataByNode(gsList);
-  const errorsArray = Array.from(errors).sort();
-  const errorMessages = errorsArray.map((error, index) =>
-    <Box key={index} display="flex" justifyContent="center">
-      <Alert severity="error" onClose={() => { handleCloseAlert(error) }}>
-        {error}
-      </Alert>
-    </Box>
-  );
+  const nodeData = useMemo(() => groupDataByNode(gsList), [gsList]);
+  const errorMessages = useMemo(() => {
+    const errorsArray = Array.from(errors).sort();
+    return errorsArray.map((error, index) =>
+      <Box key={index} display="flex" justifyContent="center">
+        <Alert severity="error" onClose={() => { handleCloseAlert(error) }}>
+          {error}
+        </Alert>
+      </Box>
+    );
+  }, [errors, handleCloseAlert]);
 
   return (
     <React.Fragment>
@@ -142,7 +147,7 @@ function ClusterDetail({ clusters }: ClusterDetailProps) {
         </Grid>
       </Grid>
       <Box sx={{ marginBottom: "30px" }}>
-        <GameServerBuildTable gsbList={gsbList} />
+        <GameServerBuildTable clusterApi={clusterApi} gsbList={gsbList} />
       </Box>
       <Typography variant="h5" gutterBottom component="div">
         Nodes

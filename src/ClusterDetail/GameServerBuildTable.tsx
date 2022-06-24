@@ -1,17 +1,22 @@
 import GameServerBuildTableItem from "./GameServerBuildTableItem";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { GameServerBuild } from "../types";
+import { visuallyHidden } from '@mui/utils';
+import { useMemo } from "react";
 
 interface GameServerBuildTableProps {
+  clusterApi: string,
   gsbList: Array<GameServerBuild>
 }
 
-function GameServerBuildTable({ gsbList }: GameServerBuildTableProps) {
-  gsbList = gsbList.sort((a: GameServerBuild, b: GameServerBuild) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
-  let items = gsbList.map((gsb, index) => <GameServerBuildTableItem key={index} gsb={gsb} />);
+function GameServerBuildTable({ clusterApi, gsbList }: GameServerBuildTableProps) {
+  const items = useMemo(() => {
+    const sortedGsb = gsbList.sort((a: GameServerBuild, b: GameServerBuild) => a.metadata.name > b.metadata.name ? 1 : (a.metadata.name < b.metadata.name ? -1 : 0));
+    return sortedGsb.map((gsb, index) => <GameServerBuildTableItem key={index} clusterApi={clusterApi} gsb={gsb} />);
+  }, [clusterApi, gsbList]);
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="simple table">
+      <Table>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
@@ -20,6 +25,7 @@ function GameServerBuildTable({ gsbList }: GameServerBuildTableProps) {
             <TableCell>StandingBy</TableCell>
             <TableCell>Crashes</TableCell>
             <TableCell>Health</TableCell>
+            <TableCell aria-label="Actions"><Box sx={visuallyHidden}>Actions</Box></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

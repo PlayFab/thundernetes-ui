@@ -18,7 +18,10 @@ const gameServerBuild: GameServerBuild = {
     standingBy: 2,
     max: 4,
     portsToExpose: [80],
-    crashesToMarkUnhealthy: 0
+    crashesToMarkUnhealthy: 0,
+    template: {
+      metadata: {}
+    }
   },
   status: {
     currentActive: 2,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Alert, Box, Typography } from "@mui/material";
@@ -123,10 +123,13 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
     return gsdByName;
   };
 
-  const handleCloseAlert = (error: string) => {
-    errors.delete(error);
-    setErrors(prev => new Set(prev));
-  };
+  const handleCloseAlert = useCallback((error: string) => {
+    setErrors(prev => {
+      const newErrors = new Set(prev);
+      newErrors.delete(error);
+      return newErrors;
+    });
+  }, []);
 
   useEffect(() => {
     getGameServerBuild();
@@ -146,16 +149,18 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
     };
   }, [getGameServerBuild, getGameServers, getGameServerDetails]);
 
-  const nodeData = groupDataByNode(gsList);
-  const gsdByName = groupDetailsByName(gsdList);
-  const errorsArray = Array.from(errors).sort();
-  const errorMessages = errorsArray.map((error, index) =>
-    <Box key={index} display="flex" justifyContent="center">
-      <Alert severity="error" onClose={() => { handleCloseAlert(error) }}>
-        {error}
-      </Alert>
-    </Box>
-  );
+  const nodeData = useMemo(() => groupDataByNode(gsList), [gsList]);
+  const gsdByName = useMemo(() => groupDetailsByName(gsdList), [gsdList]);
+  const errorMessages = useMemo(() => {
+    const errorsArray = Array.from(errors).sort();
+    return errorsArray.map((error, index) =>
+      <Box key={index} display="flex" justifyContent="center">
+        <Alert severity="error" onClose={() => { handleCloseAlert(error) }}>
+          {error}
+        </Alert>
+      </Box>
+    );
+  }, [errors, handleCloseAlert]);
 
   return (
     <React.Fragment>
@@ -200,7 +205,7 @@ function GameServerBuildDetail({ clusters }: GameServerBuildDetailProps) {
             <AllocateForm allocateApi={allocateApi} buildID={gsb.spec ? gsb.spec.buildID : ""} />
           </Box>
           <Box>
-            <GameServerTable gsList={gsList} gsdByName={gsdByName} />
+            <GameServerTable clusterApi={clusterApi} gsList={gsList} gsdByName={gsdByName} />
           </Box>
         </React.Fragment>
       }
