@@ -108,7 +108,7 @@ function Home({ clusters }: HomeProps) {
           {errorMessages}
         </React.Fragment>
       }
-      <Typography variant="h4" gutterBottom component="div" sx={{ marginBottom: "40px" }}>
+      <Typography variant="h4" component="div" sx={{ marginBottom: "40px" }}>
         Summary
       </Typography>
       <TotalSummary total={total} />

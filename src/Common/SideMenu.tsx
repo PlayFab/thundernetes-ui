@@ -4,16 +4,17 @@ import ListItemLink from './ListItemLink';
 import { useMemo } from 'react';
 
 interface SideMenuProps {
-  clusterNames: Array<string>,
+  clusters: Record<string, Record<string, string>>
   width: number
 }
 
-function SideMenu({ clusterNames, width }: SideMenuProps) {
+function SideMenu({ clusters, width }: SideMenuProps) {
   const items = useMemo(() => {
+    const clusterNames = clusters ? Object.keys(clusters) : [];
     return clusterNames.map((entry, index) => (
       <ListItemLink key={index} icon={<AccountTree />} to={entry} primary={entry} />
     ))
-  }, [clusterNames]);
+  }, [clusters]);
 
   return (
     <Drawer
