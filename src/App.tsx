@@ -20,12 +20,12 @@ function App() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
         <ErrorBoundary>
-        <Routes>
-          <Route path="/" element={<Home clusters={window.clusters} />} />
-          <Route path=":clusterName" element={<ClusterDetail clusters={window.clusters} />} />
-          <Route path=":clusterName/gsb/create" element={<GameServerBuildCreate clusters={window.clusters}/>}/>
-          <Route path=":clusterName/gsb/:namespace/:buildName" element={<GameServerBuildDetail clusters={window.clusters}/>} />
-        </Routes>
+          <Routes>
+            <Route path="/" element={<Home clusters={window.clusters} />} />
+            <Route path=":clusterName" element={<ClusterDetail clusters={window.clusters} />} />
+            <Route path=":clusterName/gsb/create" element={<GameServerBuildCreate clusters={window.clusters} />} />
+            <Route path=":clusterName/gsb/:namespace/:buildName" element={<GameServerBuildDetail clusters={window.clusters} />} />
+          </Routes>
         </ErrorBoundary>
       </Box>
     </Box>
