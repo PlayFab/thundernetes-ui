@@ -5,7 +5,7 @@ function TopAppBar () {
     <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
         <Typography variant="h5" component="div" sx={{ flexGrow: 1, marginTop: "5px", marginLeft: "20px" }}>
-          Thundernetes Control Panel
+          Thundernetes UI
         </Typography>
       </Toolbar>
     </AppBar>
