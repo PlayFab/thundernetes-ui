@@ -1,23 +1,31 @@
-# Thundernetes Control Panel
+# Thundernetes UI
 
-This project is a web front end application to manage game servers running in one or more [Thundernetes](https://github.com/PlayFab/thundernetes) clusters. 
+This project is a web front end application to manage game servers running in one or more [Thundernetes](https://github.com/PlayFab/thundernetes) clusters. To be able to connect to them, be sure to deploy the [gameserverapi](https://github.com/PlayFab/thundernetes/tree/main/cmd/gameserverapi) on each cluster.
 
-## How to run
-To be able to connect to them, be sure to deploy the [gameserverapi](https://github.com/PlayFab/thundernetes/tree/main/cmd/gameserverapi) on each cluster. Then you have to define each cluster and its endpoints in a json file called ```clusters.json``` inside the ```src``` directory, with the following structure:
+## How to config the app
+The app needs a file called ```config.js``` with the endpoints to the [gameserverapi](https://github.com/PlayFab/thundernetes/tree/main/cmd/gameserverapi) and to the [Thundernetes](https://github.com/PlayFab/thundernetes) manager (this is only to allocate game servers). Inside the file you need to define a variable called ```clusters``` with the following structure:
 
-```json
-{
+```js
+var clusters = {
   "cluster1": {
-    "api": "http://{gameserverapi_IP}:5001/api/v1/",
-    "allocate": "http://{manager_IP}:5000/api/v1/allocate"
+    "api": "http://{gameserverapi1_IP}:5001/api/v1/",
+    "allocate": "http://{manager1_IP}:5000/api/v1/allocate"
   },
   "cluster2": {
-    "api": "http://{gameserverapi_IP}:5001/api/v1/",
-    "allocate": "http://{manager_IP}:5000/api/v1/allocate"
+    "api": "http://{gameserverapi2_IP}:5001/api/v1/",
+    "allocate": "http://{manager2_IP}:5000/api/v1/allocate"
   }
 }
  ```
- If you wan to run this locally you can create a file called ```.env.development.local``` in the root of the project and define the environment variable there. Finally you can run the app with the ```npm start``` command.
+
+## How to run locally
+If you want to run this locally you can create the ```config.js``` file inside the public folder, then you can simply run the app with the ```npm start``` command.
+
+## How to run using the Docker image
+You can also run the Docker container image, all you have to do is mount a volume to pass the ```config.js``` file to the app, you can do this like this:
+```
+docker run -d -p 80:80 -v [path to your config.js]:/usr/share/nginx/html/config.js ghcr.io/playfab/thundernetes-ui:[version]
+```
 
 ## Available Scripts
 
