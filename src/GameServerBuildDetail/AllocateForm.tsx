@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { Alert, Box, Button, Grid, IconButton, InputAdornment, TextField, Tooltip } from "@mui/material";
 import { ContentCopy } from "@mui/icons-material";
 import { fetchWithTimeout } from "../utils";
+import { v4 as uuidv4 } from 'uuid';
 
 interface AllocateFormProps {
   allocateApi: string,
@@ -64,7 +65,7 @@ function AllocateForm({ allocateApi, buildID }: AllocateFormProps) {
           <TextField fullWidth name="sessionID" size="small" label="SessionID" value={sessionID} onChange={handleChange} />
         </Grid>
         <Grid item xs={1}>
-          <Button sx={{ paddingLeft: "8px", paddingRight: "8px" }} variant="contained" color="primary" onClick={() => setSessionID(crypto.randomUUID())}>
+          <Button sx={{ paddingLeft: "8px", paddingRight: "8px" }} variant="contained" color="primary" onClick={() => setSessionID(uuidv4())}>
             New ID
           </Button>
         </Grid>
