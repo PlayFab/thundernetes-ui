@@ -1,71 +1,68 @@
 # Thundernetes UI
 
-This project is a web front end application to manage game servers running in one or more [Thundernetes](https://github.com/PlayFab/thundernetes) clusters. To be able to connect to them, be sure to deploy the [gameserverapi](https://github.com/PlayFab/thundernetes/tree/main/cmd/gameserverapi) on each cluster.
+This project is a front end application to manage game servers running in one or more [Thundernetes](https://github.com/PlayFab/thundernetes) clusters. To be able to connect to them, be sure to deploy the [GameServer API](https://github.com/PlayFab/thundernetes/tree/main/cmd/gameserverapi) on each cluster.
 
-## How to config the app
-The app needs a file called ```config.js``` with the endpoints to the [gameserverapi](https://github.com/PlayFab/thundernetes/tree/main/cmd/gameserverapi) and to the [Thundernetes](https://github.com/PlayFab/thundernetes) manager (this is only to allocate game servers). Inside the file you need to define a variable called ```clusters``` with the following structure:
+## How to use
+
+### How to config the app
+The app needs a file called ```config.js``` with the endpoints to the GameServer API and to the Thundernetes manager (this is only to allocate game servers). Inside the file you need to define a variable called ```clusters``` with the following structure:
 
 ```js
 var clusters = {
   "cluster1": {
-    "api": "http://{gameserverapi1_IP}:5001/api/v1/",
-    "allocate": "http://{manager1_IP}:5000/api/v1/allocate"
+    "api": "http://{cluster1_api_IP}:5001/api/v1/",
+    "allocate": "http://{cluster1_manager_IP}:5000/api/v1/allocate"
   },
   "cluster2": {
-    "api": "http://{gameserverapi2_IP}:5001/api/v1/",
-    "allocate": "http://{manager2_IP}:5000/api/v1/allocate"
+    "api": "http://{cluster2_api_IP}:5001/api/v1/",
+    "allocate": "http://{cluster2_manager_IP}:5000/api/v1/allocate"
   }
 }
  ```
 
-## How to run locally
-If you want to run this locally you can create the ```config.js``` file inside the public folder, then you can simply run the app with the ```npm start``` command.
+### How to run locally
+If you want to run the project locally, first you need to install [Node.js](https://nodejs.org/en/download/). Then clone the project:
 
-## How to run using the Docker image
-You can also run the Docker container image, all you have to do is mount a volume to pass the ```config.js``` file to the app, you can do this like this:
 ```
-docker run -d -p 80:80 -v [path to your config.js]:/usr/share/nginx/html/config.js ghcr.io/playfab/thundernetes-ui:[version]
+git clone https://github.com/PlayFab/thundernetes-ui.git
 ```
 
-## Available Scripts
+And install the dependencies:
 
-In the project directory, you can run:
+```
+npm install
+```
 
-### `npm start`
+After this, you can create the ```config.js``` file inside the public folder, then you can simply run the app with the ```npm start``` command. This will start a server and open a browser to ```http://localhost:3000```.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### How to run using the Docker image
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+You can also run the Docker container image, all you have to do is mount a volume to pass your ```config.js``` file to the app, you can do this like this:
 
-### `npm test`
+```
+docker run -d -p 80:80 -v [path to your config.js]:/usr/share/nginx/html/config.js ghcr.io/playfab/thundernetes-ui:[current tag]
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
 
-### `npm run build`
+### Check all of your clusters in the same place
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+You can see a summary of what's going on in all your clusters.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+![Home page](./docs/images/thundernetes_ui_home.png "Home page")
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Manage the builds on each cluster
 
-### `npm run eject`
+Check the builds you have on each cluster and their current status. You can also create a new one, either from scratch, or by cloning one from any cluster!
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![Cluster view](./docs/images/thundernetes_ui_cluster.png "Cluster view")
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![Create build view](./docs/images/thundernetes_ui_cluster_create_build.png "Create build view")
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Manage each build
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+You can check each build separately and see it's status and specs, you can modify the standingBy and max values, allocate individual game servers for testing, and see a list of all the game servers running.
 
-## Learn More
+![Build view - Specs](./docs/images/thundernetes_ui_build_specs.png "Build view - Specs")
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+![Build view - GameServers](./docs/images/thundernetes_ui_build_gameservers.png "Build view - GameServers")
