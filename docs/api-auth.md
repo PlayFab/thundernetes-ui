@@ -1,12 +1,12 @@
-# How to connect to authenticate to an API
+# How to authenticate to an API
 
-Kubernetes allows you to secure the Thundernetes' GameServer API [using an Ingress](https://playfab.github.io/thundernetes/howtos/serviceingress.html), if you do this you will need a way to provide the certificates from this client. Currently the Thundernetes UI is conceived as a simple React application, and because of this it's not safe to store credentials in the app. A very easy to implement alternative is to use a proxy that contains the credentials, in the following sections we show an example for deploying a reverse proxy using the official [Nginx Docker image](https://hub.docker.com/_/nginx).
+Kubernetes allows you to secure the Thundernetes' GameServer API [using an Ingress](https://playfab.github.io/thundernetes/howtos/serviceingress.html), if you do this you will need a way to provide the certificates from this client. Currently the [Thundernetes UI](https://github.com/PlayFab/thundernetes-ui) is conceived as a simple React application, and because of this it's not safe to store credentials in the app. A very easy to implement alternative is to use a proxy that contains the credentials, in the following sections we show an example for deploying a reverse proxy using the official [Nginx Docker image](https://hub.docker.com/_/nginx).
 
 ## Architecture
 
 The idea is to use a proxy between the UI and Thunernetes' API, so the UI makes the requests to the proxy, and the proxy to the Thundernetes clusters, this way the credential can be stored in the proxy without them being exposed through the browser. You can also use a single proxy for multiple clusters, using Nginx to act as a reverse proxy.
 
-![Graphic describing the architecture of Thundernetes UI using a proxy](./thundernetes_ui_proxy.png "Graphic describing the architecture of Thundernetes UI using a proxy")
+![Graphic describing the architecture of Thundernetes UI using a proxy](./images/thundernetes_ui_proxy.png "Graphic describing the architecture of Thundernetes UI using a proxy")
 
 ## How to configure your own proxy with mTLS
 
@@ -29,7 +29,7 @@ server{
 
 This file uses ```proxy_pass``` to define that every request to ```http://{proxy_ip}/tls/``` will be forwarded to ```https://{your_endpoint_with_mTLS}/```, the trailing forward slashes are necessary so the rest of the URI is forwarded too. It also defines the key pair that the client, this proxy, uses to authenticate, for this ```proxy_ssl_certificate``` and ```proxy_ssl_certificate_key``` are used. Finally, you use ```proxy_ssl_trusted_certificate``` to define a trusted Certificate Authority (CA), so every certificate signed with that will be trusted, and also ```proxy_ssl_verify``` to toggle the validation for the certificates that come from the server.
 
-Now create a Dockerfile with the following:
+Now create a Dockerfile with the following, be sure to have the files you need in the same directory:
 
 ```Dockerfile
 FROM nginx:1.23-alpine
