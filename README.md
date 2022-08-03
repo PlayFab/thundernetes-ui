@@ -2,6 +2,8 @@
 
 This project is a front end application to manage game servers running in one or more [Thundernetes](https://github.com/PlayFab/thundernetes) clusters. To be able to connect to them, be sure to deploy the [GameServer API](https://github.com/PlayFab/thundernetes/tree/main/cmd/gameserverapi) on each cluster.
 
+Make sure to check [the documentation on the Thundernetes website](https://playfab.github.io/thundernetes/thundernetesui/README.html) for more details!
+
 ## How to use
 
 ### How to config the app
