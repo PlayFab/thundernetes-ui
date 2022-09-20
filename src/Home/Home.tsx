@@ -15,16 +15,25 @@ function Home({ clusters }: HomeProps) {
   const [gsbMap, setGsbMap] = useState<Map<string, Array<GameServerBuild>>>(new Map());
   const [errors, setErrors] = useState<Set<string>>(new Set());
 
-  const groupValues = (data: Map<string, Array<GameServerBuild>>): [Record<string, number>, Record<string, Record<string, number>>, Record<string, Record<string, number>>] => {
+  const groupValues = (data: Map<string, Array<GameServerBuild>>): [Record<string, number>, Record<string, Record<string, number>>, Record<string, Record<string, number>>, Record<string, Record<string, string>>] => {
     function emptyValues() {
       return {
         standingBy: 0,
         active: 0
       }
     };
+
+    function emptyMetadata() {
+      return {
+        namespace: "",
+        clusterName: ""
+      };
+    };
+
     let total: Record<string, number> = emptyValues();
     let perCluster: Record<string, Record<string, number>> = {};
     let perBuild: Record<string, Record<string, number>> = {};
+    let perBuildMetadata: Record<string, Record<string, string>> = {};
     const keys = Array.from(data.keys());
     keys.forEach((clusterName) => {
       if (!perCluster[clusterName]) {
@@ -35,15 +44,20 @@ function Home({ clusters }: HomeProps) {
         if (!perBuild[buildName]) {
           perBuild[buildName] = emptyValues();
         }
+        if (!perBuildMetadata[buildName]) {
+          perBuildMetadata[buildName] = emptyMetadata();
+        }
         total.standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
         perCluster[clusterName].standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
         perBuild[buildName].standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
         total.active += gsb.status.currentActive ? gsb.status.currentActive : 0;
         perCluster[clusterName].active += gsb.status.currentActive ? gsb.status.currentActive : 0;
         perBuild[buildName].active += gsb.status.currentActive ? gsb.status.currentActive : 0;
+        perBuildMetadata[buildName].namespace = gsb.metadata.namespace ? gsb.metadata.namespace : "";
+        perBuildMetadata[buildName].clusterName = clusterName;
       });
     });
-    return [total, perCluster, perBuild];
+    return [total, perCluster, perBuild, perBuildMetadata];
   }
 
   const getAllBuilds = useCallback(() => {
@@ -89,7 +103,7 @@ function Home({ clusters }: HomeProps) {
     return () => clearInterval(interval);
   }, [getAllBuilds]);
 
-  const [total, perCluster, perBuild] = useMemo(() => groupValues(gsbMap), [gsbMap]);
+  const [total, perCluster, perBuild, perBuildMetadata] = useMemo(() => groupValues(gsbMap), [gsbMap]);
   const errorMessages = useMemo(() => {
     const errorsArray = Array.from(errors).sort();
     return errorsArray.map((error, index) =>
@@ -119,7 +133,7 @@ function Home({ clusters }: HomeProps) {
       <Typography variant="h5" gutterBottom component="div">
         Builds
       </Typography>
-      <GameServerBuildsSummary perBuild={perBuild} />
+      <GameServerBuildsSummary perBuild={perBuild} perBuildMetadata={perBuildMetadata} />
     </React.Fragment>
   );
 }
