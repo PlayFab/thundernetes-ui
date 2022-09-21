@@ -6,7 +6,7 @@ import { GameServerBuild } from "../types";
 import GameServerBuildsSummary from "./GameServerBuildsSummary";
 import TotalSummary from "./TotalSummary";
 import { fetchWithTimeout } from "../utils";
-import TitlesSummary, { TitlesDetail, TitlesSummaryProps } from "./TitlesSummary";
+import TitlesSummary, { TitlesDetail } from "./TitlesSummary";
 
 interface HomeProps {
   clusters: Record<string, Record<string, string>>
