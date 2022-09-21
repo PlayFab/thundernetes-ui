@@ -14,6 +14,7 @@ interface GameServerTableProps {
 function GameServerTable({ clusterApi, gsList, gsdByName }: GameServerTableProps) {
   const [page, setPage] = useState(0);
   const [sortOrder, setSortOrder] = useState("asc");
+  const [sortOrderBy, setSortOrderBy] = useState("name");
   const rowsPerPage = 10;
 
   const emptyRows =
@@ -26,49 +27,66 @@ function GameServerTable({ clusterApi, gsList, gsdByName }: GameServerTableProps
     setPage(newPage);
   };
 
-  function descendingComparator(a: GameServer, b: GameServer) {
-    if (b.metadata.name < a.metadata.name) {
-      return -1;
-    }
-    if (b.metadata.name > a.metadata.name) {
-      return 1;
+  function descendingComparator(
+    a: GameServer,
+    b: GameServer,
+    orderBy: string
+  ): number {
+    switch (orderBy) {
+      case "name":
+        if (b.metadata.name < a.metadata.name) {
+          return -1;
+        }
+        if (b.metadata.name > a.metadata.name) {
+          return 1;
+        }
+        break;
+      default:
+        break;
     }
     return 0;
   }
 
   const sortHandler =
-    () => (event: React.MouseEvent<unknown>) => {
-      const isAsc = sortOrder === "asc";
+    (property: string) => (event: React.MouseEvent<unknown>) => {
+      const isAsc = sortOrderBy === property && sortOrder === "asc";
       setSortOrder(isAsc ? "desc" : "asc");
+      setSortOrderBy(property);
     };
 
   const items = useMemo(() => {
     function getComparator(
-      order: string
+      order: string,
+      orderBy: string
     ): (
       a: GameServer,
       b: GameServer
     ) => number {
       return order === 'desc'
-        ? (a, b) => descendingComparator(a, b)
-        : (a, b) => -descendingComparator(a, b);
+        ? (a, b) => descendingComparator(a, b, orderBy)
+        : (a, b) => -descendingComparator(a, b, orderBy);
     }
-    const sortedGs = gsList.sort(getComparator(sortOrder));
+    const sortedGs = gsList.sort(getComparator(sortOrder, sortOrderBy));
     return sortedGs.map((gs, index) => <GameServerTableItem key={index} clusterApi={clusterApi} gs={gs} gsd={gsdByName[gs.metadata.name]} />);
-  }, [clusterApi, gsList, gsdByName, sortOrder]);
+  }, [clusterApi, gsList, gsdByName, sortOrder, sortOrderBy]);
 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }}>
         <TableHead>
           <TableRow>
-            <TableCell sortDirection={sortOrder === "asc" ? "asc" : "desc"}>
+            <TableCell sortDirection={sortOrderBy === "name"? (sortOrder === "asc" ? "asc" : "desc") : false}>
               <TableSortLabel
                 active={true}
-                direction={sortOrder === "asc" ? "asc" : "desc"}
-                onClick={sortHandler()}
+                direction={sortOrderBy === "name"? (sortOrder === "asc" ? "asc" : "desc") : "asc"}
+                onClick={sortHandler("name")}
               >
                 Name
+                {sortOrderBy === "name" ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {sortOrder === "desc" ? "sorted descending" : "sorted ascending"}
+                </Box>
+              ) : null}
               </TableSortLabel>
             </TableCell>
             <TableCell>Namespace</TableCell>
