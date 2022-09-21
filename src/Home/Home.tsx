@@ -26,7 +26,7 @@ function Home({ clusters }: HomeProps) {
     function emptyMetadata() {
       return {
         namespace: "",
-        clusterName: ""
+        clusterName: "",
       };
     };
 
@@ -41,20 +41,21 @@ function Home({ clusters }: HomeProps) {
       }
       data.get(clusterName)!.forEach((gsb: GameServerBuild) => {
         let buildName = gsb.metadata.name;
-        if (!perBuild[buildName]) {
-          perBuild[buildName] = emptyValues();
+        let buildKey = clusterName + "-:-" + buildName;
+        if (!perBuild[buildKey]) {
+          perBuild[buildKey] = emptyValues();
         }
-        if (!perBuildMetadata[buildName]) {
-          perBuildMetadata[buildName] = emptyMetadata();
+        if (!perBuildMetadata[buildKey]) {
+          perBuildMetadata[buildKey] = emptyMetadata();
         }
         total.standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
         perCluster[clusterName].standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
-        perBuild[buildName].standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
+        perBuild[buildKey].standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
         total.active += gsb.status.currentActive ? gsb.status.currentActive : 0;
         perCluster[clusterName].active += gsb.status.currentActive ? gsb.status.currentActive : 0;
-        perBuild[buildName].active += gsb.status.currentActive ? gsb.status.currentActive : 0;
-        perBuildMetadata[buildName].namespace = gsb.metadata.namespace ? gsb.metadata.namespace : "";
-        perBuildMetadata[buildName].clusterName = clusterName;
+        perBuild[buildKey].active += gsb.status.currentActive ? gsb.status.currentActive : 0;
+        perBuildMetadata[buildKey].namespace = gsb.metadata.namespace ? gsb.metadata.namespace : "";
+        perBuildMetadata[buildKey].clusterName = clusterName;
       });
     });
     return [total, perCluster, perBuild, perBuildMetadata];
