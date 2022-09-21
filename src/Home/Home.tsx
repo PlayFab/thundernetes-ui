@@ -6,6 +6,7 @@ import { GameServerBuild } from "../types";
 import GameServerBuildsSummary from "./GameServerBuildsSummary";
 import TotalSummary from "./TotalSummary";
 import { fetchWithTimeout } from "../utils";
+import TitlesSummary, { TitlesDetail } from "./TitlesSummary";
 
 interface HomeProps {
   clusters: Record<string, Record<string, string>>
@@ -15,16 +16,21 @@ function Home({ clusters }: HomeProps) {
   const [gsbMap, setGsbMap] = useState<Map<string, Array<GameServerBuild>>>(new Map());
   const [errors, setErrors] = useState<Set<string>>(new Set());
 
-  const groupValues = (data: Map<string, Array<GameServerBuild>>): [Record<string, number>, Record<string, Record<string, number>>, Record<string, Record<string, number>>] => {
+  const groupValues = (data: Map<string, Array<GameServerBuild>>): [Record<string, number>, Record<string, Record<string, number>>, Record<string, Record<string, number>>, TitlesDetail] => {
+    
     function emptyValues() {
       return {
         standingBy: 0,
-        active: 0
+        active: 0,
+        pending: 0,
+        initializing: 0,
       }
     };
     let total: Record<string, number> = emptyValues();
     let perCluster: Record<string, Record<string, number>> = {};
     let perBuild: Record<string, Record<string, number>> = {};
+    let perTitle: TitlesDetail = {};
+
     const keys = Array.from(data.keys());
     keys.forEach((clusterName) => {
       if (!perCluster[clusterName]) {
@@ -32,18 +38,31 @@ function Home({ clusters }: HomeProps) {
       }
       data.get(clusterName)!.forEach((gsb: GameServerBuild) => {
         let buildName = gsb.metadata.name;
+        let titleId = gsb.spec.titleID;
         if (!perBuild[buildName]) {
           perBuild[buildName] = emptyValues();
         }
+        if (!perTitle[titleId]) {
+          perTitle[titleId] = { ...emptyValues(), status: "Healthy" };  
+        }
+        
         total.standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
-        perCluster[clusterName].standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
-        perBuild[buildName].standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
         total.active += gsb.status.currentActive ? gsb.status.currentActive : 0;
+
+        perTitle[titleId].standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
+        perTitle[titleId].active = gsb.status.currentActive ? gsb.status.currentActive : 0;
+        perTitle[titleId].pending = gsb.status.currentPending ? gsb.status.currentPending : 0;
+        perTitle[titleId].initializing = gsb.status.currentInitializing ? gsb.status.currentInitializing : 0;
+        perTitle[titleId].status = gsb.status.health === "Healthy" ? "Healthy" : gsb.status.health === "Unhealthy" ? "Unhealthy" : "Unknown";
+        
+        perCluster[clusterName].standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
         perCluster[clusterName].active += gsb.status.currentActive ? gsb.status.currentActive : 0;
+
+        perBuild[buildName].standingBy += gsb.status.currentStandingBy ? gsb.status.currentStandingBy : 0;
         perBuild[buildName].active += gsb.status.currentActive ? gsb.status.currentActive : 0;
       });
     });
-    return [total, perCluster, perBuild];
+    return [total, perCluster, perBuild, perTitle];
   }
 
   const getAllBuilds = useCallback(() => {
@@ -89,7 +108,7 @@ function Home({ clusters }: HomeProps) {
     return () => clearInterval(interval);
   }, [getAllBuilds]);
 
-  const [total, perCluster, perBuild] = useMemo(() => groupValues(gsbMap), [gsbMap]);
+  const [total, perCluster, perBuild, perTitle] = useMemo(() => groupValues(gsbMap), [gsbMap]);
   const errorMessages = useMemo(() => {
     const errorsArray = Array.from(errors).sort();
     return errorsArray.map((error, index) =>
@@ -120,6 +139,10 @@ function Home({ clusters }: HomeProps) {
         Builds
       </Typography>
       <GameServerBuildsSummary perBuild={perBuild} />
+      <Typography variant="h5" gutterBottom component="div">
+        Titles
+      </Typography>
+      <TitlesSummary perTitle={perTitle} />
     </React.Fragment>
   );
 }
