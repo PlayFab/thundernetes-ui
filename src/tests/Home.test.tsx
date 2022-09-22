@@ -173,15 +173,15 @@ it('shows a summary of all clusters', async () => {
   const cluster2Row = await screen.findByRole("row", { name: new RegExp(cluster2String) });
   expect(cluster2Row).toBeInTheDocument();
 
-  const build1String = "test_gameserverbuild1 4 4";
+  const build1String = "test_gameserverbuild1 cluster1 4 4";
   const build1Row = await screen.findByRole("row", { name: new RegExp(build1String) });
   expect(build1Row).toBeInTheDocument();
 
-  const build2String = "test_gameserverbuild2 2 2";
+  const build2String = "test_gameserverbuild2 cluster1 2 2";
   const build2Row = await screen.findByRole("row", { name: new RegExp(build2String) });
   expect(build2Row).toBeInTheDocument();
 
-  const build3String = "test_gameserverbuild3 4 4";
+  const build3String = "test_gameserverbuild3 cluster2 4 4";
   const build3Row = await screen.findByRole("row", { name: new RegExp(build3String) });
   expect(build3Row).toBeInTheDocument();
 });
