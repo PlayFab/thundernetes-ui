@@ -16,16 +16,17 @@ interface NodeMetricsInfo {
 
 function NodeTable({ nodeData }: NodeTableProps) {
   const [selectedNode, setSelectedNode] = useState<NodeMetricsInfo | undefined>(undefined);
-  const toggleSelectedNode = (nodeToggled: string, data: Record<string, number>) => {
-    if (selectedNode && nodeToggled === selectedNode.name) {
-      setSelectedNode(undefined);
-      return;
-    }
-    setSelectedNode({ name: nodeToggled, metrics: data });
-  }
-  
+
   const items = useMemo(() => {
     const nodeNames = Object.keys(nodeData).sort();
+    const toggleSelectedNode = (nodeToggled: string, data: Record<string, number>) => {
+      if (selectedNode && nodeToggled === selectedNode.name) {
+        setSelectedNode(undefined);
+        return;
+      }
+      setSelectedNode({ name: nodeToggled, metrics: data });
+    }
+
     return nodeNames.map((nodeName, index) => <NodeTableItem 
                                                 key={index} 
                                                 selectedNode={selectedNode?.name} 

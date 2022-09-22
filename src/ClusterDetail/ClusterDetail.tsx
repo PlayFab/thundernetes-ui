@@ -7,7 +7,6 @@ import GameServerBuildTable from "./GameServerBuildTable";
 import NodeTable from "../Common/NodeTable";
 import { GameServer, GameServerBuild } from "../types";
 import { fetchWithTimeout } from "../utils";
-import NodeMetricsSummary from "../Common/NodeMetricsSummary";
 
 interface ClusterDetailProps {
   clusters: Record<string, Record<string, string>>
