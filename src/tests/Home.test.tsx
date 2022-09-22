@@ -15,6 +15,7 @@ const gameServerBuildsCluster1: Array<GameServerBuild> = [
     },
     spec: {
       buildID: "85ffe8da-c82f-4035-86c5-9d2b5f42d6f6",
+      titleID: "test-game1",
       standingBy: 2,
       max: 4,
       portsToExpose: [80],
@@ -42,6 +43,7 @@ const gameServerBuildsCluster1: Array<GameServerBuild> = [
     },
     spec: {
       buildID: "85ffe8da-c82f-4035-86c5-9d2b5f42d6f6",
+      titleID: "test-game2",
       standingBy: 2,
       max: 4,
       portsToExpose: [80],
@@ -72,6 +74,7 @@ const gameServerBuildsCluster2: Array<GameServerBuild> = [
     },
     spec: {
       buildID: "85ffe8da-c82f-4035-86c5-9d2b5f42d6f6",
+      titleID: "test-game1",
       standingBy: 2,
       max: 4,
       portsToExpose: [80],
@@ -99,6 +102,7 @@ const gameServerBuildsCluster2: Array<GameServerBuild> = [
     },
     spec: {
       buildID: "85ffe8da-c82f-4035-86c5-9d2b5f42d6f6",
+      titleID: "test-game2",
       standingBy: 2,
       max: 4,
       portsToExpose: [80],

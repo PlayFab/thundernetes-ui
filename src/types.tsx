@@ -7,6 +7,7 @@ interface GameServerBuild {
   },
   spec: {
     buildID: string,
+    titleID: string,
     standingBy: number,
     max: number,
     portsToExpose: Array<number>,
@@ -60,6 +61,7 @@ const emptyGameServerBuild: GameServerBuild = {
   },
   spec: {
     buildID: "",
+    titleID: "",
     standingBy: 0,
     max: 0,
     portsToExpose: [],

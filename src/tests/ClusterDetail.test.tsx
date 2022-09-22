@@ -15,6 +15,7 @@ const gameServerBuilds: Array<GameServerBuild> = [
     },
     spec: {
       buildID: "85ffe8da-c82f-4035-86c5-9d2b5f42d6f6",
+      titleID: "test-game",
       standingBy: 0,
       max: 0,
       portsToExpose: [],
