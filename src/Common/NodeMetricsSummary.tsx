@@ -5,7 +5,7 @@ interface NodeMetrics {
     name: string;
     cpu?: number;
     memory?: number;
-    capacity?: number;
+    allocation?: number;
 }
 
 const options1 = {
@@ -37,7 +37,7 @@ function NodeMetricsSummary(props: NodeMetrics) {
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 { props.cpu && <Chart chartType='Gauge' data={[["Label", "Value"],["Memory", props.cpu]]} options={options1} />}
                 { props.memory && <Chart chartType='Gauge' data={[["Label", "Value"],["Memory", props.memory]]} options={options1} />}
-                { props.capacity !== undefined && <Chart chartType='Gauge' data={[["Label", "Value"],["Capacity", props.capacity]]} options={options2} />}
+                { props.allocation !== undefined && <Chart chartType='Gauge' data={[["Label", "Value"],["Allocation", props.allocation]]} options={options2} />}
             </div>
         </>
     )

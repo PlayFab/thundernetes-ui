@@ -54,7 +54,7 @@ function NodeTable({ nodeData }: NodeTableProps) {
       <Collapse unmountOnExit in={!!selectedNode}>
         {selectedNode && <NodeMetricsSummary 
           name={selectedNode.name} 
-          capacity={selectedNode.metrics.active === 0 && selectedNode.metrics.standingBy === 0 ? 0 : (selectedNode.metrics.standingBy*100)/(selectedNode.metrics.active + selectedNode.metrics.standingBy)}
+          allocation={selectedNode.metrics.active === 0 && selectedNode.metrics.standingBy === 0 ? 0 : (selectedNode.metrics.active*100)/(selectedNode.metrics.active + selectedNode.metrics.standingBy)}
           />}
       </Collapse>
     </>
