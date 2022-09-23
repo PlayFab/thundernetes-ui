@@ -8,7 +8,7 @@ interface NodeMetrics {
     allocation?: number;
 }
 
-const options1 = {
+const options = {
     width: 200,
     height: 150,
     redFrom: 90,
@@ -18,15 +18,6 @@ const options1 = {
     minorTicks: 5,
   };
 
-  const options2 = {
-    width: 200,
-    height: 150,
-    redFrom: 0,
-    redTo: 10,
-    yellowFrom: 10,
-    yellowTo: 25,
-    minorTicks: 5,
-  };
 
 function NodeMetricsSummary(props: NodeMetrics) {
     return (
@@ -35,9 +26,9 @@ function NodeMetricsSummary(props: NodeMetrics) {
               Metrics
             </Typography>
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                { props.cpu && <Chart chartType='Gauge' data={[["Label", "Value"],["Memory", props.cpu]]} options={options1} />}
-                { props.memory && <Chart chartType='Gauge' data={[["Label", "Value"],["Memory", props.memory]]} options={options1} />}
-                { props.allocation !== undefined && <Chart chartType='Gauge' data={[["Label", "Value"],["Allocation", props.allocation]]} options={options2} />}
+                { props.cpu && <Chart chartType='Gauge' data={[["Label", "Value"],["Memory", props.cpu]]} options={options} />}
+                { props.memory && <Chart chartType='Gauge' data={[["Label", "Value"],["Memory", props.memory]]} options={options} />}
+                { props.allocation !== undefined && <Chart chartType='Gauge' data={[["Label", "Value"],["Allocation", props.allocation]]} options={options} />}
             </div>
         </>
     )
