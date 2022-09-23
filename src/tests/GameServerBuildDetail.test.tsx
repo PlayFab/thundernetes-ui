@@ -15,6 +15,7 @@ const gameServerBuild: GameServerBuild = {
   },
   spec: {
     buildID: "85ffe8da-c82f-4035-86c5-9d2b5f42d6f6",
+    titleID: "test-game",
     standingBy: 2,
     max: 4,
     portsToExpose: [80],
